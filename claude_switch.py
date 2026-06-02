@@ -83,9 +83,9 @@ console = Console()
 
 VERSION_FILE = SCRIPT_DIR / "VERSION"
 try:
-    APP_VERSION = VERSION_FILE.read_text(encoding="utf-8").strip() or "0.1.0"
+    APP_VERSION = VERSION_FILE.read_text(encoding="utf-8").strip() or "0.1.1"
 except OSError:
-    APP_VERSION = "0.1.0"
+    APP_VERSION = "0.1.1"
 AUTHOR_LINK = "https://github.com/AonoChano"
 AUTHOR_NAME = "AonoChano"
 GITHUB_ICON = "\uf09b"
@@ -585,9 +585,13 @@ def detect_system_language():
         except Exception:
             pass
 
+    for env_name in ("LC_ALL", "LC_MESSAGES", "LANGUAGE", "LANG"):
+        value = os.environ.get(env_name)
+        if value:
+            candidates.append(value.split(":", 1)[0])
+
     for getter in (
         lambda: locale.getlocale()[0],
-        lambda: locale.getdefaultlocale()[0],
     ):
         try:
             candidates.append(getter())

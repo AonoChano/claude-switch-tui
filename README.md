@@ -40,6 +40,8 @@ It is not a proxy, router, or model gateway. ClaudeSwitch writes the local envir
 
 ## Install
 
+Requirement: Python 3.10+ with `venv` support. On Windows, install Python from python.org and enable `Add python.exe to PATH`.
+
 Windows PowerShell:
 
 ```powershell
@@ -53,6 +55,8 @@ csw
 ```
 
 The installer creates a local virtual environment, installs dependencies from `requirements.txt`, and registers the ClaudeSwitch directory in your user `PATH`.
+
+If installation says Python was not found or a virtual environment could not be created, install or repair Python 3.10+, open a new PowerShell, and rerun the one-line installer.
 
 The default install directory is:
 
@@ -180,7 +184,7 @@ A 12-18 second loop is enough. Keep real API tokens and provider-specific privat
 
 ## Project Status
 
-Current version: `0.1.0`
+Current version: `0.1.1`
 
 The project is early but usable. The next useful polish items are locale validation commands, cross-platform installer scripts, and real release screenshots.
 

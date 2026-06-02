@@ -31,6 +31,16 @@ function Invoke-Native {
     }
 }
 
+function Get-PythonDisplayName {
+    param([hashtable]$Candidate)
+
+    $argsText = ""
+    if ($Candidate.Args -and $Candidate.Args.Count -gt 0) {
+        $argsText = " " + ($Candidate.Args -join " ")
+    }
+    return "$($Candidate.Exe)$argsText"
+}
+
 function Test-PythonCandidate {
     param(
         [string]$Exe,
@@ -51,24 +61,12 @@ function Test-PythonCandidate {
     }
 }
 
-function Invoke-InstallStep {
-    param(
-        [string]$Message,
-        [scriptblock]$Action
-    )
-
-    Write-Host "[csw] $Message"
-    if (-not $DryRun) {
-        & $Action
-    }
-}
-
-function Resolve-Python {
+function Get-PythonCandidates {
     $candidates = @()
 
     $py = Get-Command py -ErrorAction SilentlyContinue
     if ($py) {
-        foreach ($selector in @("-3.12", "-3.11", "-3.10", "-3.13", "-3")) {
+        foreach ($selector in @("-3.13", "-3.12", "-3.11", "-3.10", "-3")) {
             $candidates += @{ Exe = $py.Source; Args = @($selector) }
         }
     }
@@ -83,13 +81,19 @@ function Resolve-Python {
         $candidates += @{ Exe = $python3.Source; Args = @() }
     }
 
-    foreach ($candidate in $candidates) {
-        if (Test-PythonCandidate -Exe $candidate.Exe -Args $candidate.Args) {
-            return $candidate
-        }
-    }
+    return $candidates
+}
 
-    throw "A healthy Python 3.10+ was not found. Install or repair Python first, then rerun install.ps1."
+function Invoke-InstallStep {
+    param(
+        [string]$Message,
+        [scriptblock]$Action
+    )
+
+    Write-Host "[csw] $Message"
+    if (-not $DryRun) {
+        & $Action
+    }
 }
 
 function Remove-LocalVenv {
@@ -109,6 +113,106 @@ function Remove-LocalVenv {
     }
 
     Remove-Item -LiteralPath $VenvPath -Recurse -Force
+}
+
+function Remove-InstallLaunchers {
+    param([string]$InstallRoot)
+
+    $names = @(
+        "csw.cmd",
+        "csw.bat",
+        "csw.ps1",
+        "claude-sw.cmd",
+        "claude-sw.bat",
+        "claude_sw.bat"
+    )
+    $installFull = [IO.Path]::GetFullPath($InstallRoot).TrimEnd("\") + "\"
+    foreach ($name in $names) {
+        $path = Join-Path $InstallRoot $name
+        if (-not (Test-Path -LiteralPath $path)) {
+            continue
+        }
+        $full = [IO.Path]::GetFullPath($path)
+        if (-not $full.StartsWith($installFull, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to remove launcher outside install directory: $full"
+        }
+        Remove-Item -LiteralPath $path -Force
+    }
+}
+
+function New-LocalVenv {
+    param(
+        [string]$VenvPath,
+        [string]$VenvPython,
+        [string]$InstallRoot
+    )
+
+    $allCandidates = @(Get-PythonCandidates)
+    $usableCandidates = @()
+    foreach ($candidate in $allCandidates) {
+        if (Test-PythonCandidate -Exe $candidate.Exe -Args $candidate.Args) {
+            $usableCandidates += $candidate
+        }
+    }
+
+    if (-not $usableCandidates -or $usableCandidates.Count -eq 0) {
+        $detected = if ($allCandidates -and $allCandidates.Count -gt 0) {
+            ($allCandidates | ForEach-Object { Get-PythonDisplayName -Candidate $_ }) -join ", "
+        }
+        else {
+            "none"
+        }
+        $message = @(
+            "Python 3.10+ with venv support was not found.",
+            "Detected Python commands: $detected",
+            "Install Python 3.10+ from https://www.python.org/downloads/windows/ and enable 'Add python.exe to PATH'.",
+            "Then open a new PowerShell and rerun the installer."
+        ) -join [Environment]::NewLine
+        throw $message
+    }
+
+    $attempts = @()
+    foreach ($candidate in $usableCandidates) {
+        $label = Get-PythonDisplayName -Candidate $candidate
+        Write-Host "[csw] Trying Python: $label"
+        Remove-LocalVenv -VenvPath $VenvPath -InstallRoot $InstallRoot
+
+        $previousErrorAction = $ErrorActionPreference
+        $ErrorActionPreference = "Continue"
+        $output = @()
+        $exitCode = 1
+        try {
+            $output = & $candidate.Exe @($candidate.Args) -m venv $VenvPath 2>&1
+            $exitCode = $LASTEXITCODE
+        }
+        catch {
+            $output = @($_.Exception.Message)
+            $exitCode = 1
+        }
+        finally {
+            $ErrorActionPreference = $previousErrorAction
+        }
+
+        if ($exitCode -eq 0 -and (Test-Path -LiteralPath $VenvPython)) {
+            return
+        }
+
+        $summary = ($output | Select-Object -First 3) -join " "
+        if ($summary) {
+            $attempts += "$label -> exit $exitCode; $summary"
+        }
+        else {
+            $attempts += "$label -> exit $exitCode"
+        }
+    }
+
+    Remove-LocalVenv -VenvPath $VenvPath -InstallRoot $InstallRoot
+    $message = @(
+        "Could not create ClaudeSwitch local virtual environment.",
+        "Tried: $($attempts -join ' | ')",
+        "Install or repair Python 3.10+, then rerun the installer."
+    ) -join [Environment]::NewLine
+    throw $message
 }
 
 function Add-UserPath {
@@ -500,7 +604,7 @@ if (-not (Test-Path -LiteralPath $sourceRequirements)) {
     throw "Cannot find requirements.txt: $sourceRequirements"
 }
 
-$version = if (Test-Path -LiteralPath $sourceVersion) { (Get-Content -LiteralPath $sourceVersion -Raw).Trim() } else { "0.1.0" }
+$version = if (Test-Path -LiteralPath $sourceVersion) { (Get-Content -LiteralPath $sourceVersion -Raw).Trim() } else { "0.1.1" }
 
 Write-Host "[csw] Installing Claude Switch $version"
 Write-Host "[csw] InstallDir: $InstallDir"
@@ -524,6 +628,28 @@ Invoke-InstallStep "Copying application files" {
     Copy-DirectoryIfDifferent -Source $sourceLocales -Destination (Join-Path $InstallDir "locales")
 }
 
+if (-not $SkipPip) {
+    Invoke-InstallStep "Preparing local virtual environment" {
+        if ($ResetVenv) {
+            Remove-LocalVenv -VenvPath $venvDir -InstallRoot $InstallDir
+        }
+        if (-not (Test-Path -LiteralPath $venvPython)) {
+            Remove-InstallLaunchers -InstallRoot $InstallDir
+            New-LocalVenv -VenvPath $venvDir -VenvPython $venvPython -InstallRoot $InstallDir
+        }
+        else {
+            Write-Host "[csw] Reusing existing virtual environment: $venvDir"
+        }
+    }
+    Invoke-InstallStep "Installing Python dependencies into local venv" {
+        Invoke-Native -FilePath $venvPython -Arguments @("-m", "pip", "install", "--upgrade", "pip") -ErrorMessage "Failed to upgrade pip in local venv"
+        Invoke-Native -FilePath $venvPython -Arguments @("-m", "pip", "install", "-r", (Join-Path $InstallDir "requirements.txt")) -ErrorMessage "Failed to install Python dependencies into local venv"
+    }
+}
+else {
+    Write-Host "[csw] Skipped pip dependency installation."
+}
+
 Invoke-InstallStep "Writing launchers" {
     $cmdLauncher = @'
 @echo off
@@ -544,25 +670,6 @@ $CswHome = Split-Path -Parent $MyInvocation.MyCommand.Path
 exit $LASTEXITCODE
 '@
     Set-Content -LiteralPath (Join-Path $InstallDir "csw.ps1") -Value $psLauncher -Encoding UTF8
-}
-
-if (-not $SkipPip) {
-    $python = Resolve-Python
-    Invoke-InstallStep "Preparing local virtual environment" {
-        if ($ResetVenv) {
-            Remove-LocalVenv -VenvPath $venvDir -InstallRoot $InstallDir
-        }
-        if (-not (Test-Path -LiteralPath $venvPython)) {
-            Invoke-Native -FilePath $python.Exe -Arguments (@($python.Args) + @("-m", "venv", $venvDir)) -ErrorMessage "Failed to create local virtual environment"
-        }
-    }
-    Invoke-InstallStep "Installing Python dependencies into local venv" {
-        Invoke-Native -FilePath $venvPython -Arguments @("-m", "pip", "install", "--upgrade", "pip") -ErrorMessage "Failed to upgrade pip in local venv"
-        Invoke-Native -FilePath $venvPython -Arguments @("-m", "pip", "install", "-r", (Join-Path $InstallDir "requirements.txt")) -ErrorMessage "Failed to install Python dependencies into local venv"
-    }
-}
-else {
-    Write-Host "[csw] Skipped pip dependency installation."
 }
 
 if (-not $NoLegacyCleanup) {
