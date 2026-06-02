@@ -205,6 +205,7 @@
     "unsaved_discarded": "已放弃未保存的修改",
     "keep_one_provider": "至少保留一个供应商",
     "delete_target_changed": "删除目标已变化",
-    "deleted": "已删除 {name}"
+    "deleted": "已删除 {name}",
+    "update_available": "发现 ClaudeSwitch 新版本 {version}，运行 csw --update 更新。"
   }
 }

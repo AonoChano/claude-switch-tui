@@ -9,7 +9,10 @@ import random
 import re
 import signal
 import shutil
+import tempfile
 import time
+import urllib.error
+import urllib.request
 try:
     import msvcrt
     HAS_MSVCRT = True
@@ -22,6 +25,7 @@ import threading
 import unicodedata
 import uuid
 import webbrowser
+import zipfile
 from pathlib import Path
 from rich.console import Console, Group
 from rich.table import Table
@@ -55,7 +59,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 
 
 def resolve_claude_root(script_dir):
-    if script_dir.name.lower() == "claudeswitch" and script_dir.parent.name.lower() == "scripts":
+    if script_dir.parent.name.lower() == "scripts" and script_dir.parent.parent.name.lower() == ".claude":
         return script_dir.parent.parent
     if script_dir.name.lower() == "scripts":
         return script_dir.parent
@@ -77,13 +81,25 @@ except AttributeError:
 
 console = Console()
 
-APP_VERSION = "0.1.0"
+VERSION_FILE = SCRIPT_DIR / "VERSION"
+try:
+    APP_VERSION = VERSION_FILE.read_text(encoding="utf-8").strip() or "0.1.0"
+except OSError:
+    APP_VERSION = "0.1.0"
 AUTHOR_LINK = "https://github.com/AonoChano"
 AUTHOR_NAME = "AonoChano"
 GITHUB_ICON = "\uf09b"
-PROJECT_GITHUB_LINK = ""
+PROJECT_REPO = "AonoChano/claude-switch-tui"
+PROJECT_GITHUB_LINK = f"https://github.com/{PROJECT_REPO}"
 PROJECT_GITHUB_LABEL = "\uf09b GitHubLink"
+PROJECT_RELEASE_API = f"https://api.github.com/repos/{PROJECT_REPO}/releases/latest"
+PROJECT_RELEASES_URL = f"{PROJECT_GITHUB_LINK}/releases/latest"
+CANONICAL_INSTALL_DIR_NAME = "claude-switch-tui"
 TITLE_ENV = "CLAUDE_SWITCH_SET_TITLE"
+NO_UPDATE_CHECK_ENV = "CLAUDE_SWITCH_NO_UPDATE_CHECK"
+UPDATE_CHECK_INTERVAL_SECONDS = 24 * 60 * 60
+UPDATE_CHECK_TIMEOUT_SECONDS = 4
+UPDATE_DOWNLOAD_TIMEOUT_SECONDS = 90
 
 
 def terminal_cell_width(char):
@@ -483,7 +499,9 @@ def save_json(path, data):
 def locale_directories():
     candidates = [
         SCRIPT_DIR / "locales",
+        SCRIPT_DIR / CANONICAL_INSTALL_DIR_NAME / "locales",
         SCRIPT_DIR / "ClaudeSwitch" / "locales",
+        CLAUDE_ROOT / "scripts" / CANONICAL_INSTALL_DIR_NAME / "locales",
         CLAUDE_ROOT / "scripts" / "ClaudeSwitch" / "locales",
     ]
     seen = set()
@@ -501,6 +519,23 @@ def load_json_safely(path, default):
         return load_json(path, default)
     except RuntimeError:
         return default
+
+
+def load_app_config():
+    data = load_json_safely(CLAUDE_SWITCH_CONFIG, {})
+    return data if isinstance(data, dict) else {}
+
+
+def save_app_config(config):
+    save_json(CLAUDE_SWITCH_CONFIG, config if isinstance(config, dict) else {})
+
+
+def update_app_config(values):
+    config = load_app_config()
+    for key, value in values.items():
+        config[key] = value
+    save_app_config(config)
+    return config
 
 
 class SafeFormatDict(dict):
@@ -590,7 +625,7 @@ class I18n:
         self.language = DEFAULT_LANGUAGE
         self.fallback = self.load_locale(DEFAULT_LANGUAGE)
         self.locale = self.fallback
-        config = load_json_safely(CLAUDE_SWITCH_CONFIG, {})
+        config = load_app_config()
         requested = config.get("language", AUTO_LANGUAGE) if isinstance(config, dict) else AUTO_LANGUAGE
         self.set_language(requested, persist=False)
 
@@ -743,7 +778,7 @@ class I18n:
         self.language = resolved
         self.locale = data or self.fallback
         if persist:
-            save_json(CLAUDE_SWITCH_CONFIG, {"language": self.language_preference})
+            update_app_config({"language": self.language_preference})
         return self.language
 
 
@@ -949,6 +984,217 @@ def run_profile_command(name, command):
         return completed.returncode
     finally:
         reset_terminal_modes()
+
+
+def parse_semver(value):
+    match = re.match(r"^v?(\d+)\.(\d+)\.(\d+)$", str(value or "").strip())
+    if not match:
+        return None
+    return tuple(int(part) for part in match.groups())
+
+
+def is_newer_version(latest, current):
+    latest_version = parse_semver(latest)
+    current_version = parse_semver(current)
+    if latest_version is None or current_version is None:
+        return False
+    return latest_version > current_version
+
+
+def update_check_disabled():
+    value = os.environ.get(NO_UPDATE_CHECK_ENV, "").strip().lower()
+    return value in ("1", "true", "yes", "on")
+
+
+def github_json(url, timeout=UPDATE_CHECK_TIMEOUT_SECONDS):
+    request = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "ClaudeSwitch",
+            "Accept": "application/vnd.github+json",
+        },
+    )
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        body = response.read().decode("utf-8")
+    return json.loads(body)
+
+
+def latest_release_info(timeout=UPDATE_CHECK_TIMEOUT_SECONDS):
+    data = github_json(PROJECT_RELEASE_API, timeout=timeout)
+    if not isinstance(data, dict):
+        raise RuntimeError("GitHub release response was not an object.")
+
+    tag = str(data.get("tag_name") or "").strip()
+    if parse_semver(tag) is None:
+        return {
+            "available": False,
+            "reason": "invalid_tag",
+            "tag_name": tag,
+            "latest_version": "",
+            "latest_url": str(data.get("html_url") or PROJECT_RELEASES_URL),
+            "zipball_url": str(data.get("zipball_url") or ""),
+        }
+
+    latest_version = tag[1:] if tag.lower().startswith("v") else tag
+    return {
+        "available": is_newer_version(latest_version, APP_VERSION),
+        "reason": "",
+        "tag_name": tag,
+        "latest_version": latest_version,
+        "latest_url": str(data.get("html_url") or PROJECT_RELEASES_URL),
+        "zipball_url": str(data.get("zipball_url") or ""),
+    }
+
+
+def cache_update_check(info=None):
+    payload = {"last_update_check": int(time.time())}
+    if isinstance(info, dict):
+        payload["latest_version"] = info.get("latest_version", "")
+        payload["latest_url"] = info.get("latest_url", "")
+    update_app_config(payload)
+
+
+def check_for_update(timeout=UPDATE_CHECK_TIMEOUT_SECONDS, write_cache=True):
+    info = latest_release_info(timeout=timeout)
+    if write_cache:
+        cache_update_check(info)
+    return info
+
+
+def should_check_for_update():
+    if update_check_disabled():
+        return False
+    config = load_app_config()
+    last_check = config.get("last_update_check", 0)
+    try:
+        last_check = float(last_check)
+    except (TypeError, ValueError):
+        last_check = 0
+    return time.time() - last_check >= UPDATE_CHECK_INTERVAL_SECONDS
+
+
+def canonical_install_dir():
+    if os.name == "nt":
+        home = Path(os.environ.get("USERPROFILE") or str(Path.home()))
+    else:
+        home = Path.home()
+    return home / ".claude" / "scripts" / CANONICAL_INSTALL_DIR_NAME
+
+
+def self_update_install_dir():
+    if (
+        SCRIPT_DIR.name.lower() == CANONICAL_INSTALL_DIR_NAME
+        and SCRIPT_DIR.parent.name.lower() == "scripts"
+        and SCRIPT_DIR.parent.parent.name.lower() == ".claude"
+    ):
+        return SCRIPT_DIR
+    return canonical_install_dir()
+
+
+def download_file(url, destination, timeout=UPDATE_DOWNLOAD_TIMEOUT_SECONDS):
+    request = urllib.request.Request(url, headers={"User-Agent": "ClaudeSwitch"})
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        with open(destination, "wb") as handle:
+            shutil.copyfileobj(response, handle)
+
+
+def safe_extract_zip(zip_path, destination):
+    destination = Path(destination).resolve()
+    with zipfile.ZipFile(zip_path) as archive:
+        for member in archive.infolist():
+            target = (destination / member.filename).resolve()
+            if target != destination and not str(target).startswith(str(destination) + os.sep):
+                raise RuntimeError(f"Refusing to extract unsafe archive member: {member.filename}")
+        archive.extractall(destination)
+
+
+def find_install_script_from_archive(destination):
+    destination = Path(destination)
+    for path in destination.rglob("install.ps1"):
+        if path.is_file():
+            return path
+    return None
+
+
+def print_update_check():
+    try:
+        info = check_for_update(timeout=10, write_cache=True)
+    except (OSError, urllib.error.URLError, json.JSONDecodeError, RuntimeError) as exc:
+        print(f"Update check failed: {exc}", file=sys.stderr)
+        return 1
+
+    latest = info.get("latest_version") or info.get("tag_name") or "unknown"
+    if info.get("available"):
+        print(f"New ClaudeSwitch version available: {latest}")
+        print(info.get("latest_url") or PROJECT_RELEASES_URL)
+    elif info.get("reason") == "invalid_tag":
+        print(f"Latest GitHub release tag is not semver: {info.get('tag_name')}", file=sys.stderr)
+        return 1
+    else:
+        print(f"ClaudeSwitch is up to date ({APP_VERSION}).")
+    return 0
+
+
+def run_self_update():
+    if os.name != "nt":
+        print("csw --update currently uses the Windows PowerShell installer.", file=sys.stderr)
+        return 1
+
+    try:
+        info = check_for_update(timeout=10, write_cache=True)
+    except (OSError, urllib.error.URLError, json.JSONDecodeError, RuntimeError) as exc:
+        print(f"Update check failed: {exc}", file=sys.stderr)
+        return 1
+
+    if info.get("reason") == "invalid_tag":
+        print(f"Latest GitHub release tag is not semver: {info.get('tag_name')}", file=sys.stderr)
+        return 1
+    if not info.get("available"):
+        print(f"ClaudeSwitch is up to date ({APP_VERSION}).")
+        return 0
+
+    zip_url = info.get("zipball_url")
+    if not zip_url:
+        print("Latest GitHub release does not provide a source zip URL.", file=sys.stderr)
+        return 1
+
+    install_dir = self_update_install_dir()
+    print(f"Updating ClaudeSwitch to {info.get('latest_version')}...")
+    print(f"InstallDir: {install_dir}")
+
+    with tempfile.TemporaryDirectory(prefix="claude-switch-tui-update-") as temp_dir:
+        temp_path = Path(temp_dir)
+        zip_path = temp_path / "source.zip"
+        extract_dir = temp_path / "source"
+        extract_dir.mkdir(parents=True, exist_ok=True)
+
+        try:
+            download_file(zip_url, zip_path)
+            safe_extract_zip(zip_path, extract_dir)
+        except (OSError, urllib.error.URLError, zipfile.BadZipFile, RuntimeError) as exc:
+            print(f"Failed to download or extract release source: {exc}", file=sys.stderr)
+            return 1
+
+        install_script = find_install_script_from_archive(extract_dir)
+        if not install_script:
+            print("Release source did not contain install.ps1.", file=sys.stderr)
+            return 1
+
+        command = [
+            "powershell.exe",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(install_script),
+            "-InstallDir",
+            str(install_dir),
+        ]
+        env = os.environ.copy()
+        env["CLAUDE_SWITCH_RUNNING_DIR"] = str(SCRIPT_DIR)
+        completed = subprocess.run(command, env=env)
+        return completed.returncode
+
 
 def get_active_url():
     s = load_json(CLAUDE_SETTINGS, {})
@@ -1799,6 +2045,7 @@ class PromptApp:
 
         if self.cleaned_settings_tokens:
             self.set_status(self.i18n.t("status.settings_sanitized", "已清理 settings.json 中的明文密钥"), "class:status.warn")
+        self.start_update_check()
 
     def set_status(self, text, style="class:status.good", seconds=TEMP_STATUS_SECONDS):
         self.status_text = text
@@ -1810,6 +2057,31 @@ class PromptApp:
         if self.status_until and time.time() >= self.status_until and not self.busy:
             self.status_text = ""
             self.status_until = 0
+
+    def start_update_check(self):
+        if self.selection_output or not should_check_for_update():
+            return
+
+        def worker():
+            try:
+                info = check_for_update(timeout=UPDATE_CHECK_TIMEOUT_SECONDS, write_cache=True)
+            except Exception:
+                try:
+                    cache_update_check()
+                except Exception:
+                    pass
+                return
+
+            if info.get("available"):
+                version = info.get("latest_version") or info.get("tag_name") or ""
+                text = self.i18n.t(
+                    "status.update_available",
+                    "New ClaudeSwitch {version} is available. Run csw --update.",
+                    version=version,
+                )
+                self.set_status(text, "class:status.warn", 8)
+
+        threading.Thread(target=worker, daemon=True).start()
 
     def invalidate(self):
         if self.pt_app:
@@ -3367,7 +3639,13 @@ class PromptApp:
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         cmd = sys.argv[1]
-        if cmd == "--list":
+        if cmd == "--version":
+            print(APP_VERSION)
+        elif cmd == "--check-update":
+            sys.exit(print_update_check())
+        elif cmd == "--update":
+            sys.exit(run_self_update())
+        elif cmd == "--list":
             profiles = load_profiles()
             print(json.dumps([{"name": p.get('name', ''), "url": p.get('url', '')} for p in profiles]))
         elif cmd == "--apply" and len(sys.argv) > 2:

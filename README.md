@@ -1,4 +1,3 @@
-![alt text](.\docs\assets\GitHub_Hero.png)
 <p align="center">
   <img src="docs/assets/GitHub_Hero.png" alt="ClaudeSwitch terminal UI preview" width="960">
 </p>
@@ -44,9 +43,7 @@ It is not a proxy, router, or model gateway. ClaudeSwitch writes the local envir
 Windows PowerShell:
 
 ```powershell
-git clone https://github.com/AonoChano/claude-switch-tui.git
-cd claude-switch-tui
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+irm https://raw.githubusercontent.com/AonoChano/claude-switch-tui/main/bootstrap.ps1 | iex
 ```
 
 Open a new terminal, then run:
@@ -57,6 +54,20 @@ csw
 
 The installer creates a local virtual environment, installs dependencies from `requirements.txt`, and registers the ClaudeSwitch directory in your user `PATH`.
 
+The default install directory is:
+
+```text
+%USERPROFILE%\.claude\scripts\claude-switch-tui
+```
+
+Manual install from a cloned repository still works:
+
+```powershell
+git clone https://github.com/AonoChano/claude-switch-tui.git
+cd claude-switch-tui
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
 ### Upgrade from early builds
 
 Early builds placed `claude_switch.py`, `csw.bat`, `claude_sw.bat`, or `claude-sw.bat` directly under `%USERPROFILE%\.claude\scripts`.
@@ -65,7 +76,8 @@ The installer now migrates that setup by default:
 
 - Removes known legacy launchers from `%USERPROFILE%\.claude\scripts`.
 - Removes the old `%USERPROFILE%\.claude\scripts` entry from user `PATH`.
-- Registers `%USERPROFILE%\.claude\scripts\ClaudeSwitch` first in user `PATH`.
+- Removes the old `%USERPROFILE%\.claude\scripts\ClaudeSwitch` entry from user `PATH`.
+- Registers `%USERPROFILE%\.claude\scripts\claude-switch-tui` first in user `PATH`.
 - Repairs PowerShell profile lines that still point to old launcher files.
 - Warns when user-level `ANTHROPIC_*` environment variables are set, without printing or deleting their values.
 
@@ -104,12 +116,21 @@ CLI helpers:
 csw --list
 csw --run "DeepSeek" claude
 csw --sanitize-settings
+csw --version
+csw --check-update
+csw --update
 ```
 
 ClaudeSwitch updates the Windows Terminal tab title while it runs. Set this before launching to disable title changes:
 
 ```powershell
 $env:CLAUDE_SWITCH_SET_TITLE = "0"
+```
+
+ClaudeSwitch checks GitHub Releases for updates at most once per day on TUI startup. It ignores normal commits on `main`; only release tags like `v0.1.1` count as versions. Disable startup checks with:
+
+```powershell
+$env:CLAUDE_SWITCH_NO_UPDATE_CHECK = "1"
 ```
 
 ## Security Model

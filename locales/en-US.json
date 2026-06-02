@@ -206,6 +206,7 @@
     "unsaved_discarded": "Discarded unsaved changes",
     "keep_one_provider": "Keep at least one provider",
     "delete_target_changed": "Delete target changed",
-    "deleted": "Deleted {name}"
+    "deleted": "Deleted {name}",
+    "update_available": "New ClaudeSwitch {version} is available. Run csw --update."
   }
 }

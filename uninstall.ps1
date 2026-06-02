@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$InstallDir = (Join-Path $env:USERPROFILE ".claude\scripts\ClaudeSwitch"),
+    [string]$InstallDir = (Join-Path $env:USERPROFILE ".claude\scripts\claude-switch-tui"),
     [switch]$KeepFiles
 )
 

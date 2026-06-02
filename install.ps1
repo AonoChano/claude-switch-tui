@@ -1,10 +1,11 @@
 [CmdletBinding()]
 param(
-    [string]$InstallDir = (Join-Path $env:USERPROFILE ".claude\scripts\ClaudeSwitch"),
+    [string]$InstallDir = (Join-Path $env:USERPROFILE ".claude\scripts\claude-switch-tui"),
     [switch]$NoPath,
     [switch]$SkipPip,
     [switch]$NoLegacyCleanup,
     [switch]$Elevate,
+    [switch]$ResetVenv,
     [switch]$DryRun
 )
 
@@ -127,10 +128,10 @@ function Add-UserPath {
         }
     }
 
-    $newPath = if ($current) { "$current;$PathToAdd" } else { $PathToAdd }
+    $newPath = if ($current) { "$PathToAdd;$current" } else { $PathToAdd }
     [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
     if (($env:Path -split ";") -notcontains $PathToAdd) {
-        $env:Path = "$env:Path;$PathToAdd"
+        $env:Path = "$PathToAdd;$env:Path"
     }
     Write-Host "[csw] Added to User PATH: $PathToAdd"
 }
@@ -159,7 +160,7 @@ function Remove-UserPath {
 function Register-ClaudeSwitchPath {
     param(
         [string]$PathToAdd,
-        [string]$LegacyPath
+        [string[]]$LegacyPaths = @()
     )
 
     $current = [Environment]::GetEnvironmentVariable("Path", "User")
@@ -169,15 +170,27 @@ function Register-ClaudeSwitchPath {
     }
 
     $normalizedTarget = $PathToAdd.TrimEnd("\")
-    $normalizedLegacy = $LegacyPath.TrimEnd("\")
+    $normalizedLegacyPaths = @()
+    foreach ($legacyPath in $LegacyPaths) {
+        if ($legacyPath) {
+            $normalizedLegacyPaths += $legacyPath.TrimEnd("\")
+        }
+    }
     $filtered = @()
     foreach ($part in $parts) {
         $trimmed = $part.TrimEnd("\")
         if ([string]::Equals($trimmed, $normalizedTarget, [StringComparison]::OrdinalIgnoreCase)) {
             continue
         }
-        if ([string]::Equals($trimmed, $normalizedLegacy, [StringComparison]::OrdinalIgnoreCase)) {
-            Write-Host "[csw] Removing legacy User PATH entry: $LegacyPath"
+        $isLegacy = $false
+        foreach ($legacyPath in $normalizedLegacyPaths) {
+            if ([string]::Equals($trimmed, $legacyPath, [StringComparison]::OrdinalIgnoreCase)) {
+                Write-Host "[csw] Removing legacy User PATH entry: $part"
+                $isLegacy = $true
+                break
+            }
+        }
+        if ($isLegacy) {
             continue
         }
         $filtered += $part
@@ -186,10 +199,25 @@ function Register-ClaudeSwitchPath {
     $newParts = @($PathToAdd) + $filtered
     [Environment]::SetEnvironmentVariable("Path", ($newParts -join ";"), "User")
 
-    $envParts = $env:Path -split ";" | Where-Object {
-        $_ -and
-        -not [string]::Equals($_.TrimEnd("\"), $normalizedTarget, [StringComparison]::OrdinalIgnoreCase) -and
-        -not [string]::Equals($_.TrimEnd("\"), $normalizedLegacy, [StringComparison]::OrdinalIgnoreCase)
+    $envParts = @()
+    foreach ($envPart in ($env:Path -split ";")) {
+        if (-not $envPart) {
+            continue
+        }
+        $trimmed = $envPart.TrimEnd("\")
+        if ([string]::Equals($trimmed, $normalizedTarget, [StringComparison]::OrdinalIgnoreCase)) {
+            continue
+        }
+        $isLegacy = $false
+        foreach ($legacyPath in $normalizedLegacyPaths) {
+            if ([string]::Equals($trimmed, $legacyPath, [StringComparison]::OrdinalIgnoreCase)) {
+                $isLegacy = $true
+                break
+            }
+        }
+        if (-not $isLegacy) {
+            $envParts += $envPart
+        }
     }
     $env:Path = (@($PathToAdd) + $envParts) -join ";"
     Write-Host "[csw] Registered User PATH: $PathToAdd"
@@ -247,6 +275,71 @@ function Remove-LegacyFiles {
         }
         Remove-Item -LiteralPath $legacyVenv -Recurse -Force
         Write-Host "[csw] Removed legacy venv: $legacyVenv"
+    }
+}
+
+function Remove-LegacyInstallDirectory {
+    param(
+        [string]$LegacyInstallDir,
+        [string]$InstallRoot,
+        [string]$SourceRoot
+    )
+
+    if (-not (Test-Path -LiteralPath $LegacyInstallDir)) {
+        return
+    }
+
+    $legacyFull = [IO.Path]::GetFullPath($LegacyInstallDir).TrimEnd("\") + "\"
+    $installFull = [IO.Path]::GetFullPath($InstallRoot).TrimEnd("\") + "\"
+    $sourceFull = [IO.Path]::GetFullPath($SourceRoot).TrimEnd("\") + "\"
+    $scriptsFull = [IO.Path]::GetFullPath((Join-Path $env:USERPROFILE ".claude\scripts")).TrimEnd("\") + "\"
+    $runningDir = [Environment]::GetEnvironmentVariable("CLAUDE_SWITCH_RUNNING_DIR", "Process")
+    $runningFull = ""
+    if ($runningDir) {
+        $runningFull = [IO.Path]::GetFullPath($runningDir).TrimEnd("\") + "\"
+    }
+
+    if ($legacyFull -eq $installFull -or $legacyFull -eq $sourceFull -or ($runningFull -and $legacyFull -eq $runningFull)) {
+        return
+    }
+    if (-not $legacyFull.StartsWith($scriptsFull, [StringComparison]::OrdinalIgnoreCase)) {
+        throw "Refusing to clean legacy install directory outside .claude scripts: $legacyFull"
+    }
+
+    $legacyItems = @(
+        "claude_switch.py",
+        "requirements.txt",
+        "VERSION",
+        "install.ps1",
+        "uninstall.ps1",
+        "bootstrap.ps1",
+        "csw.cmd",
+        "csw.bat",
+        "csw.ps1",
+        "claude-sw.cmd",
+        "claude-sw.bat",
+        "claude_sw.bat",
+        "locales",
+        ".venv"
+    )
+
+    foreach ($name in $legacyItems) {
+        $path = Join-Path $LegacyInstallDir $name
+        if (-not (Test-Path -LiteralPath $path)) {
+            continue
+        }
+        $full = [IO.Path]::GetFullPath($path)
+        if (-not $full.StartsWith($legacyFull, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Refusing to remove legacy item outside legacy install directory: $full"
+        }
+        Remove-Item -LiteralPath $path -Recurse -Force
+        Write-Host "[csw] Removed legacy install item: $path"
+    }
+
+    $remaining = Get-ChildItem -LiteralPath $LegacyInstallDir -Force -ErrorAction SilentlyContinue
+    if (-not $remaining) {
+        Remove-Item -LiteralPath $LegacyInstallDir -Force
+        Write-Host "[csw] Removed empty legacy install directory: $LegacyInstallDir"
     }
 }
 
@@ -378,6 +471,7 @@ if ($Elevate -and -not (Test-IsAdmin)) {
     if ($NoPath) { $arguments += " -NoPath" }
     if ($SkipPip) { $arguments += " -SkipPip" }
     if ($NoLegacyCleanup) { $arguments += " -NoLegacyCleanup" }
+    if ($ResetVenv) { $arguments += " -ResetVenv" }
     if ($DryRun) { $arguments += " -DryRun" }
     Start-Process -FilePath "powershell.exe" -ArgumentList $arguments -Verb RunAs
     exit 0
@@ -385,10 +479,17 @@ if ($Elevate -and -not (Test-IsAdmin)) {
 
 $sourceRoot = $PSScriptRoot
 $legacyScriptsDir = Join-Path $env:USERPROFILE ".claude\scripts"
+$legacyInstallDirs = @(
+    (Join-Path $legacyScriptsDir "ClaudeSwitch")
+) | Select-Object -Unique
+$legacyPathEntries = @($legacyScriptsDir) + $legacyInstallDirs
 $sourceScript = Join-Path $sourceRoot "claude_switch.py"
 $sourceRequirements = Join-Path $sourceRoot "requirements.txt"
 $sourceVersion = Join-Path $sourceRoot "VERSION"
 $sourceLocales = Join-Path $sourceRoot "locales"
+$sourceInstall = Join-Path $sourceRoot "install.ps1"
+$sourceUninstall = Join-Path $sourceRoot "uninstall.ps1"
+$sourceBootstrap = Join-Path $sourceRoot "bootstrap.ps1"
 $venvDir = Join-Path $InstallDir ".venv"
 $venvPython = Join-Path $venvDir "Scripts\python.exe"
 
@@ -414,6 +515,11 @@ Invoke-InstallStep "Copying application files" {
     Copy-IfDifferent -Source $sourceRequirements -Destination (Join-Path $InstallDir "requirements.txt")
     if (Test-Path -LiteralPath $sourceVersion) {
         Copy-IfDifferent -Source $sourceVersion -Destination (Join-Path $InstallDir "VERSION")
+    }
+    foreach ($script in @($sourceInstall, $sourceUninstall, $sourceBootstrap)) {
+        if (Test-Path -LiteralPath $script) {
+            Copy-IfDifferent -Source $script -Destination (Join-Path $InstallDir (Split-Path -Leaf $script))
+        }
     }
     Copy-DirectoryIfDifferent -Source $sourceLocales -Destination (Join-Path $InstallDir "locales")
 }
@@ -442,9 +548,13 @@ exit $LASTEXITCODE
 
 if (-not $SkipPip) {
     $python = Resolve-Python
-    Invoke-InstallStep "Creating local virtual environment" {
-        Remove-LocalVenv -VenvPath $venvDir -InstallRoot $InstallDir
-        Invoke-Native -FilePath $python.Exe -Arguments (@($python.Args) + @("-m", "venv", $venvDir)) -ErrorMessage "Failed to create local virtual environment"
+    Invoke-InstallStep "Preparing local virtual environment" {
+        if ($ResetVenv) {
+            Remove-LocalVenv -VenvPath $venvDir -InstallRoot $InstallDir
+        }
+        if (-not (Test-Path -LiteralPath $venvPython)) {
+            Invoke-Native -FilePath $python.Exe -Arguments (@($python.Args) + @("-m", "venv", $venvDir)) -ErrorMessage "Failed to create local virtual environment"
+        }
     }
     Invoke-InstallStep "Installing Python dependencies into local venv" {
         Invoke-Native -FilePath $venvPython -Arguments @("-m", "pip", "install", "--upgrade", "pip") -ErrorMessage "Failed to upgrade pip in local venv"
@@ -458,6 +568,9 @@ else {
 if (-not $NoLegacyCleanup) {
     Invoke-InstallStep "Migrating legacy files and shell environment" {
         Remove-LegacyFiles -LegacyDir $legacyScriptsDir -InstallRoot $InstallDir
+        foreach ($legacyInstallDir in $legacyInstallDirs) {
+            Remove-LegacyInstallDirectory -LegacyInstallDir $legacyInstallDir -InstallRoot $InstallDir -SourceRoot $sourceRoot
+        }
         Repair-PowerShellProfiles -LegacyDir $legacyScriptsDir -InstallRoot $InstallDir
         Warn-UserClaudeEnvironment
     }
@@ -472,7 +585,7 @@ if (-not $NoPath) {
             Add-UserPath -PathToAdd $InstallDir
         }
         else {
-            Register-ClaudeSwitchPath -PathToAdd $InstallDir -LegacyPath $legacyScriptsDir
+            Register-ClaudeSwitchPath -PathToAdd $InstallDir -LegacyPaths $legacyPathEntries
         }
     }
 }
