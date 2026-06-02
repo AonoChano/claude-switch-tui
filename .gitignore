@@ -36,6 +36,7 @@ docs/assets/Edit_page.png
 /docs/README_IMAGE_PROMPT.md
 
 # Local ClaudeSwitch state and secrets
+AGENTS.md
 settings.json
 custom_profiles.json
 claude_switch_config.json
