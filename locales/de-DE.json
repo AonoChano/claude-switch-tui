@@ -1,0 +1,210 @@
+{
+  "meta": {
+    "code": "de-DE",
+    "name": "German",
+    "native_name": "Deutsch",
+    "order": 0
+  },
+  "app": {
+    "title": "Claude Code Umgebungsumschalter"
+  },
+  "menu": {
+    "full": {
+      "nav": "↑↓:Navigieren",
+      "enable": "Enter:Modell aktivieren",
+      "launch": "C:Claude starten",
+      "add": "A:Hinzufügen",
+      "edit": "E:Bearbeiten",
+      "delete": "D:Löschen",
+      "models": "M:Modelldetails",
+      "language": "L:Sprache"
+    },
+    "compact": {
+      "nav": "↑↓",
+      "enable": "Enter:Aktivieren",
+      "launch": "C:Claude",
+      "add": "A:Hinzufügen",
+      "edit": "E:Bearbeiten",
+      "delete": "D:Löschen",
+      "models": "M:Details",
+      "language": "L:Sprache"
+    },
+    "minimal": {
+      "enable": "Enter:Aktivieren",
+      "launch": "C:Claude",
+      "add": "A",
+      "edit": "E",
+      "delete": "D",
+      "models": "M",
+      "language": "L"
+    }
+  },
+  "table": {
+    "status": "Status",
+    "provider": "Anbietername",
+    "base_url": "Base URL",
+    "token": "Token",
+    "token_state": {
+      "keyring": "Keyring",
+      "dpapi": "DPAPI",
+      "encrypted": "Verschl.",
+      "dpapi_unavailable": "DPAPI N/A",
+      "legacy": "Migrieren",
+      "unset": "Nicht ges."
+    },
+    "empty": "Keine Anbieter. Drücken Sie A zum Hinzufügen.",
+    "active": "Aktiv",
+    "no_models": "└── Keine Modelle konfiguriert"
+  },
+  "footer": {
+    "launch_button": "  Claude Code starten  "
+  },
+  "language": {
+    "title": "Sprache",
+    "help": "↑↓/Scrollen:Auswählen | Klick:Wählen | Doppelklick/Enter:Anwenden | Esc:Zurück",
+    "auto": "System folgen",
+    "current_mark": "aktuell",
+    "applied": "Sprache gewechselt zu: {name}"
+  },
+  "form": {
+    "new_title": "Anbieter hinzufügen",
+    "edit_title": "Anbieter bearbeiten",
+    "help": "Tab/↑↓ Felder wechseln, Enter weiter, im letzten Feld Enter speichern, Esc zurück.",
+    "token_note": "Token wird nie im Klartext in settings.json geschrieben; Profile nutzen den aktuellen sicheren Systemspeicher.",
+    "fields": {
+      "name": "Anbietername",
+      "url": "Base URL",
+      "token": "API Token",
+      "opus": "Opus Modell",
+      "sonnet": "Sonnet Modell",
+      "haiku": "Haiku Modell",
+      "anthropic": "ANTHROPIC_MODEL"
+    },
+    "buttons": {
+      "save": "  Speichern  ",
+      "back": "  Zurück  "
+    },
+    "token_hint": {
+      "saved": "Verschl.; leer lassen zum Behalten",
+      "empty": "Leer lassen: kein Token"
+    },
+    "errors": {
+      "name_required": "Anbietername ist erforderlich",
+      "token_encrypt_failed": "Token-Verschlüsselung fehlgeschlagen: {message}"
+    }
+  },
+  "confirm": {
+    "unsaved_title": "  Ungespeicherte Änderungen  ",
+    "unsaved_body": " Speichern, verwerfen oder abbrechen, um die Bearbeitung fortzusetzen.",
+    "save": "  Speichern  ",
+    "discard": "  Verwerfen  ",
+    "cancel": "  Abbrechen  ",
+    "delete_title": "  Löschen bestätigen: {name}",
+    "delete_body": " Das Löschen wird sofort in custom_profiles.json geschrieben.",
+    "delete": "  Löschen bestätigen  "
+  },
+  "tips": [
+    {
+      "text": "*Tipp: Wenn Sie eine Maus verwenden, klicken Sie, um Ihren Anbieter auszuwählen."
+    },
+    {
+      "text": "*Tipp: Aus Sicherheitsgründen werden Einstellungen nur übernommen, wenn Sie Claude Code aus diesem Fenster starten. Der direkte Aufruf von `claude` in einem neuen Terminal bleibt unbeeinflusst."
+    },
+    {
+      "text": "*Tipp: Doppelklicken Sie, um einen Anbieter zu aktivieren; wenn Sie die Tastatur bevorzugen, reicht einmal Enter."
+    },
+    {
+      "text": "*Tipp: Sie sehen die Zeile mit dem CLI-Pfad? Das ist Ihr aktuelles Arbeitsverzeichnis. Die Schaltfläche «Claude Code starten» öffnet Claude Code genau mit diesem Verzeichnis."
+    },
+    {
+      "text": "*Tipp: Drücken Sie während der Bearbeitung Esc, werden Sie gefragt, ob Sie speichern, verwerfen oder abbrechen möchten."
+    },
+    {
+      "text": "*Tipp: Heißer Tipp: Ihr `Key` landet zuerst im sicheren Systemspeicher: DPAPI unter Windows, System-Keyring unter macOS/Linux."
+    },
+    {
+      "text": "*Tipp: Dies ist ein lokales Tool — Ihre Schlüssel verlassen niemals Ihren Computer."
+    },
+    {
+      "text": "*Tipp: Zum Beenden drücken Sie zweimal Ctrl-C. Warum? Der Autor weiß es auch nicht..."
+    },
+    {
+      "text": "*Tipp: Wenn Sie länger als 60 Sekunden auf diesen Bildschirm starren, drücken Sie einfach C, um Claude Code zu starten — es wartet schon lange."
+    },
+    {
+      "text": "*Tipp: Keine Sorge, wenn Sie den falschen Anbieter wählen. Geben Sie einfach `csw` im Terminal ein, um jederzeit zu wechseln."
+    },
+    {
+      "text": "*Tipp: Manche fanden das alte Konfigurationsfenster zu kryptisch, daher gibt es diese Version."
+    },
+    {
+      "text": "*Tipp: Drücken Sie M, um Modelldetails anzuzeigen — vielleicht entdecken Sie versteckte Konfigurationen, die Sie vergessen haben."
+    },
+    {
+      "text": "*Tipp: Fun Fact: Der Entwickler nutzt dieses Tool selbst, also treffen Bugs ihn zuerst."
+    },
+    {
+      "text": "*Tipp: Fun Fact: Der Entwickler ist nur ein Student, der die umständliche API-Wechsel-Prozedur für Claude Code leid ist."
+    },
+    {
+      "text": "*Tipp: Eiskalter Fakt: `csw --apply Anbietername` wechselt den Anbieter ohne die Benutzeroberfläche zu öffnen — sofort einsatzbereit."
+    },
+    {
+      "text": "*Tipp: Fun Fact: `csw --list` gibt alle gespeicherten Anbieternamen und URLs als JSON im Terminal aus — perfekt für Skripte."
+    },
+    {
+      "text": "*Tipp: Fun Fact: `csw --run Anbietername claude` startet Claude temporär mit den Umgebungsvariablen dieses Anbieters, ohne Ihre aktuelle Auswahl zu beeinflussen."
+    },
+    {
+      "text": "*Tipp: Fun Fact: `csw --env-json Anbietername` gibt die Umgebungsvariablen (außer Token) dieses Anbieters als JSON aus — praktisch zum Debuggen von Problemen mit Modellnamen."
+    },
+    {
+      "text": "*Tipp: Fun Fact: `csw --sanitize-settings` bereinigt settings.json von möglichen Klartext-Schlüsseln und hinterlässt nur verschlüsselte dpapi-Werte."
+    },
+    {
+      "text": "*Tipp: Fun Fact: `csw --select-launch dateipfad` öffnet die Auswahl, schreibt den gewählten Anbieternamen in die angegebene Datei und beendet sich — nützlich für andere Skripte."
+    },
+    {
+      "text": "*Tipp: Wenn Ihnen diese Tipps gefallen, danken Sie den Benutzern. Wenn sie schlecht sind, geben Sie dem Autor die Schuld."
+    },
+    {
+      "text": "*Tipp: Durch doppeltes Drücken der Eingabetaste starten Sie ebenfalls Claude Code."
+    },
+    {
+      "text": "*Tipp: Der Autor hasst Salat wirklich sehr 🚫🥗"
+    }
+  ],
+  "tip_terms": {
+    "cold": [
+      "Wissenswert"
+    ],
+    "ice": [
+      "Eiskalter Fakt"
+    ],
+    "hot": [
+      "Heißer Tipp"
+    ],
+    "author": [
+      "Autor",
+      "Entwickler"
+    ]
+  },
+  "status": {
+    "settings_sanitized": "Klartext-Schlüssel aus settings.json entfernt",
+    "author_opened": "Autorprofil geöffnet",
+    "no_editable_provider": "Kein Anbieter zum Bearbeiten",
+    "no_enable_provider": "Kein Anbieter zum Aktivieren",
+    "switching": "Wechsle zu {name}...",
+    "switched": "Zu {name} gewechselt",
+    "switched_secure": "Zu {name} gewechselt (Sicherheitsprüfung bestanden: Schlüssel nicht offengelegt)",
+    "error": "Fehler: {message}",
+    "enable_first": "Aktivieren Sie zuerst ein Modell mit Enter",
+    "exit_prompt": "Drücken Sie Ctrl-C erneut zum Beenden.",
+    "added_encrypted": "Anbieter hinzugefügt; Token sicher gespeichert",
+    "updated_encrypted": "Änderungen gespeichert; Token sicher gespeichert",
+    "unsaved_discarded": "Ungespeicherte Änderungen verworfen",
+    "keep_one_provider": "Mindestens ein Anbieter muss bleiben",
+    "delete_target_changed": "Löschziel hat sich geändert",
+    "deleted": "{name} gelöscht"
+  }
+}

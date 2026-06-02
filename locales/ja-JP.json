@@ -1,0 +1,210 @@
+{
+  "meta": {
+    "code": "ja-JP",
+    "name": "Japanese",
+    "native_name": "日本語",
+    "order": 0
+  },
+  "app": {
+    "title": "Claude Code 環境切替センター"
+  },
+  "menu": {
+    "full": {
+      "nav": "↑↓:移動",
+      "enable": "Enter:モデル有効化",
+      "launch": "C:Claude起動",
+      "add": "A:追加",
+      "edit": "E:編集",
+      "delete": "D:削除",
+      "models": "M:モデル詳細",
+      "language": "L:言語設定"
+    },
+    "compact": {
+      "nav": "↑↓",
+      "enable": "Enter:有効化",
+      "launch": "C:Claude",
+      "add": "A:追加",
+      "edit": "E:編集",
+      "delete": "D:削除",
+      "models": "M:詳細",
+      "language": "L:言語"
+    },
+    "minimal": {
+      "enable": "Enter:有効化",
+      "launch": "C:Claude",
+      "add": "A",
+      "edit": "E",
+      "delete": "D",
+      "models": "M",
+      "language": "L"
+    }
+  },
+  "table": {
+    "status": "ステータス",
+    "provider": "プロバイダー名",
+    "base_url": "Base URL",
+    "token": "Token",
+    "token_state": {
+      "keyring": "Keyring",
+      "dpapi": "DPAPI",
+      "encrypted": "暗号化済み",
+      "dpapi_unavailable": "DPAPI N/A",
+      "legacy": "移行待ち",
+      "unset": "未設定"
+    },
+    "empty": "プロバイダーがありません。Aを押して追加。",
+    "active": "有効",
+    "no_models": "└── モデル設定なし"
+  },
+  "footer": {
+    "launch_button": "  Claude Codeを起動  "
+  },
+  "language": {
+    "title": "言語設定",
+    "help": "↑↓/スクロール:選択 | クリック:ピック | ダブルクリック/Enter:適用 | Esc:戻る",
+    "auto": "システムに従う",
+    "current_mark": "現在",
+    "applied": "{name}に言語切替済み"
+  },
+  "form": {
+    "new_title": "プロバイダー追加",
+    "edit_title": "プロバイダー編集",
+    "help": "Tab/↑↓ フィールド移動、Enterで次へ、最終フィールドでEnter保存、Escで戻る。",
+    "token_note": "Tokenはsettings.jsonに平文で書き込まれません。プロファイル保存時は現在のシステム安全ストアを使います。",
+    "fields": {
+      "name": "プロバイダー名",
+      "url": "Base URL",
+      "token": "API Token",
+      "opus": "Opus モデル",
+      "sonnet": "Sonnet モデル",
+      "haiku": "Haiku モデル",
+      "anthropic": "ANTHROPIC_MODEL"
+    },
+    "buttons": {
+      "save": "  保存  ",
+      "back": "  戻る  "
+    },
+    "token_hint": {
+      "saved": "暗号化済み。空欄で保持",
+      "empty": "空欄ならTokenなし"
+    },
+    "errors": {
+      "name_required": "プロバイダー名は必須です",
+      "token_encrypt_failed": "Tokenの暗号化に失敗: {message}"
+    }
+  },
+  "confirm": {
+    "unsaved_title": "  未保存の変更  ",
+    "unsaved_body": " 保存、破棄、またはキャンセルして編集続行。",
+    "save": "  保存  ",
+    "discard": "  破棄  ",
+    "cancel": "  キャンセル  ",
+    "delete_title": "  削除確認: {name}",
+    "delete_body": " 削除後すぐにcustom_profiles.jsonに書き込まれます。",
+    "delete": "  削除確認  "
+  },
+  "tips": [
+    {
+      "text": "*Tip: マウスを使用する場合、クリックでプロバイダーを選択してください。"
+    },
+    {
+      "text": "*Tip: セキュリティのため、設定はこのウィンドウからClaude Codeを起動した場合のみ適用されます。新しいターミナルで直接`claude`と入力しても影響しません。"
+    },
+    {
+      "text": "*Tip: ダブルクリックでプロバイダーを有効状態にできます。キーボード派の方はEnterを1回押すだけ。"
+    },
+    {
+      "text": "*Tip: CLIがある行が現在の作業ディレクトリです。右の「Claude Codeを起動」ボタンはそのディレクトリを作業パスとしてClaude Codeを起動します。"
+    },
+    {
+      "text": "*Tip: 編集中にEscを押すと、保存・破棄・キャンセルのいずれかを尋ねます。"
+    },
+    {
+      "text": "*Tip: 注目メモ: `Key`はまずシステム安全ストアへ渡されます。WindowsはDPAPI、macOS/Linuxはシステムキーリングです。"
+    },
+    {
+      "text": "*Tip: 参考情報: これはローカルツールです。あなたのキーが外部にアップロードされることはありません。"
+    },
+    {
+      "text": "*Tip: 終了するにはCtrl-Cを2回連続で押してください。なぜかは作者にもわかりません……"
+    },
+    {
+      "text": "*Tip: この画面を60秒以上見つめているなら、Cを押してClaude Codeを起動しましょう。待っています。"
+    },
+    {
+      "text": "*Tip: プロバイダーを間違えても大丈夫。ターミナルで`csw`と再入力すればいつでも切り替えられます。"
+    },
+    {
+      "text": "*Tip: 古い設定画面が神秘的な儀式のようだと不評だったので、このバージョンに変えました……"
+    },
+    {
+      "text": "*Tip: Mを押すとモデル詳細が表示され、自分でも忘れていた隠し設定を発見できるかもしれません。"
+    },
+    {
+      "text": "*Tip: トリビア: このツールの開発者自身も使っています。バグがあれば真っ先に彼が困るのでご安心を。"
+    },
+    {
+      "text": "*Tip: トリビア: 開発者は、Claude CodeのAPI切り替えの面倒な作業に嫌気がさした大学生です。"
+    },
+    {
+      "text": "*Tip: 驚きの事実: `csw --apply プロバイダー名` を叩くと、このUIを開かずにそのプロバイダーを有効にできます。切替後すぐに使えます。"
+    },
+    {
+      "text": "*Tip: トリビア: `csw --list` は保存済みの全プロバイダー名とURLをJSONでターミナルに出力します。スクリプトや自動化にどうぞ。"
+    },
+    {
+      "text": "*Tip: トリビア: `csw --run プロバイダー名 claude` は、そのプロバイダーの環境変数を一時的に使ってClaudeを起動します。現在有効なプロバイダーは変更しません。"
+    },
+    {
+      "text": "*Tip: トリビア: `csw --env-json プロバイダー名` は、そのプロバイダーに対応する環境変数（Tokenを除く）をJSONで出力します。「モデル名がおかしい」問題のデバッグに便利です。"
+    },
+    {
+      "text": "*Tip: トリビア: `csw --sanitize-settings` は、settings.jsonに残っている可能性のある平文のキーを削除し、暗号化されたdpapi値のみを残します。"
+    },
+    {
+      "text": "*Tip: トリビア: `csw --select-launch ファイルパス` はこのUIを開いて選択させ、選択したプロバイダー名を指定ファイルに書き込んで終了します。他のスクリプトがその結果を利用するのに適しています。"
+    },
+    {
+      "text": "*Tip: これらのヒントが良いと思ったらそれはユーザーのおかげ。悪いと思ったら作者のせい。"
+    },
+    {
+      "text": "*Tip: EnterをダブルクリックでもClaude Codeを起動できます。"
+    },
+    {
+      "text": "*Tip: 作者はサラダが大嫌いです 🚫🥗"
+    }
+  ],
+  "tip_terms": {
+    "cold": [
+      "ミニ知識"
+    ],
+    "ice": [
+      "冷えた知識"
+    ],
+    "hot": [
+      "注目メモ"
+    ],
+    "author": [
+      "作者",
+      "開発者"
+    ]
+  },
+  "status": {
+    "settings_sanitized": "settings.jsonの平文キーを削除しました",
+    "author_opened": "作者ページを開きました",
+    "no_editable_provider": "編集できるプロバイダーがありません",
+    "no_enable_provider": "有効化できるプロバイダーがありません",
+    "switching": "{name}へ切り替え中...",
+    "switched": "{name}へ切り替えました",
+    "switched_secure": "{name}へ切り替えました（安全確認済み: キー未露出）",
+    "error": "エラー: {message}",
+    "enable_first": "先にEnterでモデルを有効化してください",
+    "exit_prompt": "もう一度 Ctrl-C で終了します。",
+    "added_encrypted": "プロバイダーを追加し、Tokenを安全に保存しました",
+    "updated_encrypted": "変更を保存し、Tokenを安全に保存しました",
+    "unsaved_discarded": "未保存の変更を破棄しました",
+    "keep_one_provider": "少なくとも1つのプロバイダーが必要です",
+    "delete_target_changed": "削除対象が変わりました",
+    "deleted": "{name}を削除しました"
+  }
+}

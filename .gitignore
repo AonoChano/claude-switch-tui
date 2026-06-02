@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.spec
+
+# Installer/runtime output
+pip-selfcheck.json
+*.log
+logs/
+tmp/
+temp/
+
+# Local screenshots captured during UI experiments
+docs/assets/WindowsTerminal_*.png
+docs/assets/Main_Page.png
+docs/assets/Edit_page.png
+/docs/README_IMAGE_PROMPT.md
+
+# Local ClaudeSwitch state and secrets
+settings.json
+custom_profiles.json
+claude_switch_config.json
+*.local.json
+*.secrets.json
+*.secret.json
+*.token
+*.key
+
+# Editor and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini

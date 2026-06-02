@@ -1,0 +1,210 @@
+{
+  "meta": {
+    "code": "ko-KR",
+    "name": "Korean",
+    "native_name": "한국어",
+    "order": 0
+  },
+  "app": {
+    "title": "Claude Code 환경 전환 센터"
+  },
+  "menu": {
+    "full": {
+      "nav": "↑↓:이동",
+      "enable": "Enter:모델 활성화",
+      "launch": "C:Claude 실행",
+      "add": "A:추가",
+      "edit": "E:편집",
+      "delete": "D:삭제",
+      "models": "M:모델 세부정보",
+      "language": "L:언어 설정"
+    },
+    "compact": {
+      "nav": "↑↓",
+      "enable": "Enter:활성화",
+      "launch": "C:Claude",
+      "add": "A:추가",
+      "edit": "E:편집",
+      "delete": "D:삭제",
+      "models": "M:세부정보",
+      "language": "L:언어"
+    },
+    "minimal": {
+      "enable": "Enter:활성화",
+      "launch": "C:Claude",
+      "add": "A",
+      "edit": "E",
+      "delete": "D",
+      "models": "M",
+      "language": "L"
+    }
+  },
+  "table": {
+    "status": "상태",
+    "provider": "공급자 이름",
+    "base_url": "Base URL",
+    "token": "Token",
+    "token_state": {
+      "keyring": "Keyring",
+      "dpapi": "DPAPI",
+      "encrypted": "암호화됨",
+      "dpapi_unavailable": "DPAPI N/A",
+      "legacy": "이전필요",
+      "unset": "미설정"
+    },
+    "empty": "공급자가 없습니다. A를 눌러 추가하세요.",
+    "active": "활성화됨",
+    "no_models": "└── 설정된 모델 없음"
+  },
+  "footer": {
+    "launch_button": "  Claude Code 실행  "
+  },
+  "language": {
+    "title": "언어 설정",
+    "help": "↑↓/스크롤:선택 | 클릭:지정 | 더블클릭/Enter:적용 | Esc:뒤로",
+    "auto": "시스템 설정 따르기",
+    "current_mark": "현재",
+    "applied": "언어가 {name}(으)로 전환되었습니다"
+  },
+  "form": {
+    "new_title": "공급자 추가",
+    "edit_title": "공급자 편집",
+    "help": "Tab/↑↓ 필드 이동, Enter 다음, 마지막 필드에서 Enter 저장, Esc 뒤로.",
+    "token_note": "Token은 settings.json에 평문으로 기록되지 않습니다. 프로필 저장 시 현재 시스템 보안 저장소를 사용합니다.",
+    "fields": {
+      "name": "공급자 이름",
+      "url": "Base URL",
+      "token": "API Token",
+      "opus": "Opus 모델",
+      "sonnet": "Sonnet 모델",
+      "haiku": "Haiku 모델",
+      "anthropic": "ANTHROPIC_MODEL"
+    },
+    "buttons": {
+      "save": "  저장  ",
+      "back": "  뒤로  "
+    },
+    "token_hint": {
+      "saved": "암호화됨; 비우면 유지",
+      "empty": "비우면 Token 없음"
+    },
+    "errors": {
+      "name_required": "공급자 이름은 필수입니다",
+      "token_encrypt_failed": "Token 암호화 실패: {message}"
+    }
+  },
+  "confirm": {
+    "unsaved_title": "  저장되지 않은 변경사항  ",
+    "unsaved_body": " 저장, 버리기 또는 취소하고 계속 편집합니다.",
+    "save": "  저장  ",
+    "discard": "  버리기  ",
+    "cancel": "  취소  ",
+    "delete_title": "  삭제 확인: {name}",
+    "delete_body": " 삭제 즉시 custom_profiles.json에 기록됩니다.",
+    "delete": "  삭제 확인  "
+  },
+  "tips": [
+    {
+      "text": "*팁: 마우스를 사용한다면 클릭하여 공급자를 선택하세요."
+    },
+    {
+      "text": "*팁: 보안을 위해 설정은 이 창에서 Claude Code를 실행할 때만 적용됩니다. 새 터미널에서 직접 `claude`를 입력하면 영향을 받지 않습니다."
+    },
+    {
+      "text": "*팁: 더블클릭으로 공급자를 활성화할 수 있습니다. 키보드가 편하다면 Enter 한 번이면 됩니다."
+    },
+    {
+      "text": "*팁: CLI 경로가 보이는 줄이 현재 작업 디렉터리입니다. 오른쪽의 「Claude Code 실행」 버튼은 해당 디렉터리를 작업 경로로 하여 Claude Code를 실행합니다."
+    },
+    {
+      "text": "*팁: 편집 중에 Esc를 누르면 저장, 버리기 또는 취소 중 하나를 묻습니다."
+    },
+    {
+      "text": "*팁: 핫팁: `Key`는 먼저 시스템 보안 저장소에 맡깁니다. Windows는 DPAPI, macOS/Linux는 시스템 키링을 사용합니다."
+    },
+    {
+      "text": "*팁: 참고: 이 도구는 로컬 소프트웨어입니다. 키가 외부로 업로드되지 않습니다."
+    },
+    {
+      "text": "*팁: 종료하려면 Ctrl-C를 두 번 연속으로 누르세요. 이유는 저자도 모릅니다……"
+    },
+    {
+      "text": "*팁: 이 화면을 60초 이상 응시하고 있다면 차라리 C를 눌러 Claude Code를 실행하세요. 기다리고 있습니다."
+    },
+    {
+      "text": "*팁: 공급자를 잘못 선택해도 괜찮습니다. 터미널에서 `csw`를 다시 입력하면 언제든지 전환할 수 있습니다."
+    },
+    {
+      "text": "*팁: 예전 설정 창이 미스터리한 의식 같다는 불만이 있어 이 버전으로 바뀌었습니다……"
+    },
+    {
+      "text": "*팁: M을 누르면 모델 세부정보가 펼쳐집니다. 자신도 까먹고 있던 숨은 설정을 발견할 수도 있습니다."
+    },
+    {
+      "text": "*팁: 재미있는 사실: 이 도구의 개발자도 직접 사용합니다. 버그가 있다면 그가 제일 먼저 곤란해지니 안심하세요."
+    },
+    {
+      "text": "*팁: 재미있는 사실: 개발자는 Claude Code의 API 전환 복잡한 작업에 지친 대학생일 뿐입니다."
+    },
+    {
+      "text": "*팁: 얼음 같은 사실: `csw --apply 공급자이름`을 입력하면 UI를 열지 않고도 해당 공급자를 활성화할 수 있습니다. 전환 후 바로 사용 가능합니다."
+    },
+    {
+      "text": "*팁: 재미있는 사실: `csw --list`는 저장된 모든 공급자 이름과 주소를 JSON 형태로 터미널에 출력합니다. 스크립트나 자동화에 적합합니다."
+    },
+    {
+      "text": "*팁: 재미있는 사실: `csw --run 공급자이름 claude`는 해당 공급자의 환경 변수를 임시로 사용하여 Claude를 한 번 실행합니다. 현재 활성화된 공급자는 변경하지 않습니다."
+    },
+    {
+      "text": "*팁: 재미있는 사실: `csw --env-json 공급자이름`은 해당 공급자의 환경 변수(Token 제외)를 JSON으로 출력합니다. '모델 이름이 잘못됐다'는 문제 디버깅에 편리합니다."
+    },
+    {
+      "text": "*팁: 재미있는 사실: `csw --sanitize-settings`는 settings.json에 남아 있을 수 있는 평문 키를 정리하고 암호화된 dpapi 값만 남깁니다."
+    },
+    {
+      "text": "*팁: 재미있는 사실: `csw --select-launch 파일경로`는 이 UI를 열어 선택하게 하고, 선택한 공급자 이름을 지정한 파일에 쓴 뒤 종료합니다 — 다른 스크립트가 그 결과를 활용하기에 좋습니다."
+    },
+    {
+      "text": "*팁: 이 팁들이 좋게 느껴진다면 그것은 사용자 덕분입니다. 별로라면 저자 탓으로 하세요."
+    },
+    {
+      "text": "*팁: Enter 더블클릭으로도 Claude Code를 실행할 수 있습니다."
+    },
+    {
+      "text": "*팁: 저자는 샐러드를 매우 싫어합니다 🚫🥗"
+    }
+  ],
+  "tip_terms": {
+    "cold": [
+      "사소한 팁"
+    ],
+    "ice": [
+      "아주 차가운 팁"
+    ],
+    "hot": [
+      "핫팁"
+    ],
+    "author": [
+      "작성자",
+      "개발자"
+    ]
+  },
+  "status": {
+    "settings_sanitized": "settings.json의 평문 키를 정리했습니다",
+    "author_opened": "작성자 페이지를 열었습니다",
+    "no_editable_provider": "편집할 공급자가 없습니다",
+    "no_enable_provider": "활성화할 공급자가 없습니다",
+    "switching": "{name}(으)로 전환 중...",
+    "switched": "{name}(으)로 전환했습니다",
+    "switched_secure": "{name}(으)로 전환했습니다 (보안 확인 통과: 키 노출 없음)",
+    "error": "오류: {message}",
+    "enable_first": "먼저 Enter로 모델을 활성화하세요",
+    "exit_prompt": "종료하려면 Ctrl-C를 한 번 더 누르세요.",
+    "added_encrypted": "공급자를 추가했고 Token을 안전하게 저장했습니다",
+    "updated_encrypted": "변경을 저장했고 Token을 안전하게 저장했습니다",
+    "unsaved_discarded": "저장하지 않은 변경을 버렸습니다",
+    "keep_one_provider": "공급자는 하나 이상 필요합니다",
+    "delete_target_changed": "삭제 대상이 변경되었습니다",
+    "deleted": "{name} 삭제됨"
+  }
+}

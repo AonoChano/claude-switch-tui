@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "code": "en-US",
+    "name": "English (US)",
+    "native_name": "English",
+    "order": 0
+  },
+  "app": {
+    "title": "Claude Code Environment Switcher"
+  },
+  "menu": {
+    "full": {
+      "nav": "↑↓:Navigate",
+      "enable": "Enter:Enable model",
+      "launch": "C:Launch Claude",
+      "add": "A:Add",
+      "edit": "E:Edit",
+      "delete": "D:Delete",
+      "models": "M:Model details",
+      "language": "L:Language"
+    },
+    "compact": {
+      "nav": "↑↓",
+      "enable": "Enter:Enable",
+      "launch": "C:Claude",
+      "add": "A:Add",
+      "edit": "E:Edit",
+      "delete": "D:Delete",
+      "models": "M:Details",
+      "language": "L:Language"
+    },
+    "minimal": {
+      "enable": "Enter:Enable",
+      "launch": "C:Claude",
+      "add": "A",
+      "edit": "E",
+      "delete": "D",
+      "models": "M",
+      "language": "L"
+    }
+  },
+  "table": {
+    "status": "Status",
+    "provider": "Provider Name",
+    "base_url": "Base URL",
+    "token": "Token",
+    "token_state": {
+      "keyring": "Keyring",
+      "dpapi": "DPAPI",
+      "encrypted": "Encrypted",
+      "dpapi_unavailable": "DPAPI N/A",
+      "legacy": "Migrate",
+      "unset": "Unset"
+    },
+    "empty": "No providers. Press A to add.",
+    "active": "Active",
+    "no_models": "└── No models configured"
+  },
+  "footer": {
+    "launch_button": "  Launch Claude Code  "
+  },
+  "language": {
+    "title": "Language",
+    "help": "↑↓/scroll: select | click: pick | double-click/Enter: apply | Esc: back",
+    "auto": "Follow System",
+    "current_mark": "current",
+    "applied": "Switched language: {name}"
+  },
+  "form": {
+    "new_title": "Add Provider",
+    "edit_title": "Edit Provider",
+    "help": "Tab/↑↓ switch fields, Enter next, Enter on last field to save, Esc back.",
+    "token_note": "Token is never written to settings.json in plaintext; saved to profile using the current system secure store.",
+    "fields": {
+      "name": "Provider Name",
+      "url": "Base URL",
+      "token": "API Token",
+      "opus": "Opus model",
+      "sonnet": "Sonnet model",
+      "haiku": "Haiku model",
+      "anthropic": "ANTHROPIC_MODEL"
+    },
+    "buttons": {
+      "save": "  Save  ",
+      "back": "  Back  "
+    },
+    "token_hint": {
+      "saved": "Encrypted; leave blank to keep",
+      "empty": "Leave blank to set no Token"
+    },
+    "errors": {
+      "name_required": "Provider name is required",
+      "token_encrypt_failed": "Token encryption failed: {message}"
+    }
+  },
+  "confirm": {
+    "unsaved_title": "  Unsaved changes  ",
+    "unsaved_body": " Save, discard, or cancel to continue editing.",
+    "save": "  Save  ",
+    "discard": "  Discard  ",
+    "cancel": "  Cancel  ",
+    "delete_title": "  Confirm delete: {name}",
+    "delete_body": " Deletion will be written to custom_profiles.json immediately.",
+    "delete": "  Confirm delete  "
+  },
+  "tips": [
+    {
+      "text": "*Tip: If you use a mouse, click to select your provider."
+    },
+    {
+      "text": "*Tip: For security, settings only apply when you launch Claude Code from this window. Running `claude` directly in a new terminal won't be affected."
+    },
+    {
+      "text": "*Tip: Double-click to activate a provider; if you prefer keyboard, just press Enter."
+    },
+    {
+      "text": "*Tip: See the line showing the current CLI path? That's your working directory. The \"Launch Claude Code\" button will start Claude Code there."
+    },
+    {
+      "text": "*Tip: Pressing Esc while editing will ask whether to save, discard, or cancel."
+    },
+    {
+      "text": "*Tip: Hot tip: your `Key` uses system secure storage first: DPAPI on Windows, system keyring on macOS/Linux."
+    },
+    {
+      "text": "*Tip: This is a local tool — your keys never leave your computer."
+    },
+    {
+      "text": "*Tip: To exit, press Ctrl-C twice. Why? The author doesn't know either..."
+    },
+    {
+      "text": "*Tip: If you've been staring at this screen for over 60 seconds, just press C to launch Claude Code — it's been waiting."
+    },
+    {
+      "text": "*Tip: Don't worry about picking the wrong provider. Just type `csw` in the terminal anytime to switch."
+    },
+    {
+      "text": "*Tip: Some found the old config window too cryptic, so this version exists."
+    },
+    {
+      "text": "*Tip: Press M to see model details — you might discover some hidden config you forgot about."
+    },
+    {
+      "text": "*Tip: Fun fact: the developer uses this tool themselves, so bugs will hit them first."
+    },
+    {
+      "text": "*Tip: Fun fact: the developer is just a college student tired of the messy API switching process for Claude Code."
+    },
+    {
+      "text": "*Tip: Ice-cold fact: `csw --apply ProviderName` switches providers without opening the UI — ready to use immediately."
+    },
+    {
+      "text": "*Tip: Fun fact: `csw --list` outputs all saved provider names and URLs as JSON, perfect for scripting."
+    },
+    {
+      "text": "*Tip: Fun fact: `csw --run ProviderName claude` temporarily uses that provider's environment to launch Claude without affecting your current selection."
+    },
+    {
+      "text": "*Tip: Fun fact: `csw --env-json ProviderName` prints the provider's environment variables (except Token) as JSON — great for debugging model name issues."
+    },
+    {
+      "text": "*Tip: Fun fact: `csw --sanitize-settings` cleans plaintext keys from settings.json and keeps Token data in secure storage."
+    },
+    {
+      "text": "*Tip: Fun fact: `csw --select-launch filepath` opens the picker, writes the chosen provider name to the specified file, and exits — useful for scripting."
+    },
+    {
+      "text": "*Tip: If you like these tips, credit the users. If they suck, blame the author."
+    },
+    {
+      "text": "*Tip: Double-pressing Enter also launches Claude Code."
+    },
+    {
+      "text": "*Tip: The author really hates salad 🚫🥗"
+    }
+  ],
+  "tip_terms": {
+    "hot": [
+      "Hot fact",
+      "Hot tip"
+    ],
+    "cold": [
+      "Fun fact"
+    ],
+    "ice": [
+      "Ice-cold fact"
+    ],
+    "author": [
+      "author",
+      "developer"
+    ]
+  },
+  "status": {
+    "settings_sanitized": "Removed plaintext keys from settings.json",
+    "author_opened": "Opened author profile",
+    "no_editable_provider": "No provider to edit",
+    "no_enable_provider": "No provider to enable",
+    "switching": "Switching to {name}...",
+    "switched": "Switched to {name}",
+    "switched_secure": "Switched to {name} (secure check passed: key not exposed)",
+    "error": "Error: {message}",
+    "enable_first": "Enable a model with Enter first",
+    "exit_prompt": "Press Ctrl-C again to exit.",
+    "added_encrypted": "Provider added; Token saved securely",
+    "updated_encrypted": "Changes saved; Token saved securely",
+    "unsaved_discarded": "Discarded unsaved changes",
+    "keep_one_provider": "Keep at least one provider",
+    "delete_target_changed": "Delete target changed",
+    "deleted": "Deleted {name}"
+  }
+}

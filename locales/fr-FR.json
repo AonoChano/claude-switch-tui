@@ -1,0 +1,210 @@
+{
+  "meta": {
+    "code": "fr-FR",
+    "name": "French",
+    "native_name": "Français",
+    "order": 0
+  },
+  "app": {
+    "title": "Centre de changement d'environnement Claude Code"
+  },
+  "menu": {
+    "full": {
+      "nav": "↑↓:naviguer",
+      "enable": "Enter:activer le modèle",
+      "launch": "C:lancer Claude",
+      "add": "A:ajouter",
+      "edit": "E:modifier",
+      "delete": "D:supprimer",
+      "models": "M:détails du modèle",
+      "language": "L:langue"
+    },
+    "compact": {
+      "nav": "↑↓",
+      "enable": "Enter:activer",
+      "launch": "C:Claude",
+      "add": "A:ajouter",
+      "edit": "E:modifier",
+      "delete": "D:supprimer",
+      "models": "M:détails",
+      "language": "L:langue"
+    },
+    "minimal": {
+      "enable": "Enter:activer",
+      "launch": "C:Claude",
+      "add": "A",
+      "edit": "E",
+      "delete": "D",
+      "models": "M",
+      "language": "L"
+    }
+  },
+  "table": {
+    "status": "Statut",
+    "provider": "Nom du fournisseur",
+    "base_url": "Base URL",
+    "token": "Token",
+    "token_state": {
+      "keyring": "Keyring",
+      "dpapi": "DPAPI",
+      "encrypted": "Chiffré",
+      "dpapi_unavailable": "DPAPI N/A",
+      "legacy": "Migrer",
+      "unset": "Non déf."
+    },
+    "empty": "Aucun fournisseur. Appuyez sur A pour en ajouter.",
+    "active": "Activé",
+    "no_models": "└── Aucun modèle configuré"
+  },
+  "footer": {
+    "launch_button": "  Lancer Claude Code  "
+  },
+  "language": {
+    "title": "Langue",
+    "help": "↑↓/défilement:sélectionner | clic:choisir | double-clic/Enter:appliquer | Esc:retour",
+    "auto": "Suivre le système",
+    "current_mark": "actuel",
+    "applied": "Langue changée : {name}"
+  },
+  "form": {
+    "new_title": "Ajouter un fournisseur",
+    "edit_title": "Modifier le fournisseur",
+    "help": "Tab/↑↓ changer de champ, Enter suivant, sur le dernier champ Enter sauvegarde, Esc retour.",
+    "token_note": "Le Token n'est jamais écrit en clair dans settings.json ; le profil utilise le stockage sécurisé du système.",
+    "fields": {
+      "name": "Nom du fournisseur",
+      "url": "Base URL",
+      "token": "API Token",
+      "opus": "Modèle Opus",
+      "sonnet": "Modèle Sonnet",
+      "haiku": "Modèle Haiku",
+      "anthropic": "ANTHROPIC_MODEL"
+    },
+    "buttons": {
+      "save": "  Sauvegarder  ",
+      "back": "  Retour  "
+    },
+    "token_hint": {
+      "saved": "Chiffré ; vide pour conserver",
+      "empty": "Vide : aucun Token"
+    },
+    "errors": {
+      "name_required": "Le nom du fournisseur est requis",
+      "token_encrypt_failed": "Échec du chiffrement du Token : {message}"
+    }
+  },
+  "confirm": {
+    "unsaved_title": "  Modifications non sauvegardées  ",
+    "unsaved_body": " Choisissez sauvegarder, abandonner ou annuler pour continuer à modifier.",
+    "save": "  Sauvegarder  ",
+    "discard": "  Abandonner  ",
+    "cancel": "  Annuler  ",
+    "delete_title": "  Confirmer la suppression : {name}",
+    "delete_body": " La suppression sera immédiatement écrite dans custom_profiles.json.",
+    "delete": "  Confirmer la suppression  "
+  },
+  "tips": [
+    {
+      "text": "*Astuce : si vous utilisez la souris, cliquez pour sélectionner votre fournisseur."
+    },
+    {
+      "text": "*Astuce : pour des raisons de sécurité, les paramètres ne s'appliquent que si vous lancez Claude Code depuis cette fenêtre. Exécuter `claude` directement dans un nouveau terminal ne sera pas affecté."
+    },
+    {
+      "text": "*Astuce : double-cliquez pour activer un fournisseur ; si vous préférez le clavier, un seul Enter suffit."
+    },
+    {
+      "text": "*Astuce : vous voyez la ligne avec le CLI ? C'est votre répertoire de travail actuel. Le bouton « Lancer Claude Code » ouvrira Claude Code avec ce répertoire comme chemin de travail."
+    },
+    {
+      "text": "*Astuce : en pleine édition et vous voulez partir ? Appuyez sur Esc sans crainte. Le logiciel vous demandera si vous voulez sauvegarder, abandonner ou si c'était une fausse manœuvre…"
+    },
+    {
+      "text": "*Astuce : note chaude : votre `Key` va d'abord dans le stockage sécurisé du système : DPAPI sous Windows, trousseau système sous macOS/Linux."
+    },
+    {
+      "text": "*Astuce : info utile : c'est un logiciel local. Vos clés ne sont jamais envoyées ailleurs."
+    },
+    {
+      "text": "*Astuce : pour quitter, appuyez deux fois sur Ctrl-C. Pourquoi ? L'auteur ne sait pas non plus…"
+    },
+    {
+      "text": "*Astuce : si vous fixez cet écran depuis plus de 60 secondes, appuyez sur C pour lancer Claude Code. Il vous attend depuis longtemps."
+    },
+    {
+      "text": "*Astuce : ne vous inquiétez pas de choisir le mauvais fournisseur. Tapez simplement `csw` dans le terminal pour changer à tout moment."
+    },
+    {
+      "text": "*Astuce : certains trouvaient l'ancienne fenêtre de configuration trop mystérieuse, d'où cette nouvelle version…"
+    },
+    {
+      "text": "*Astuce : appuyez sur M pour voir les détails du modèle. Vous découvrirez peut-être des configurations cachées que vous aviez oubliées."
+    },
+    {
+      "text": "*Astuce : anecdote : l'auteur de cet outil l'utilise lui-même. Pas de panique, s'il y a un bug, il sera le premier à en pâtir."
+    },
+    {
+      "text": "*Astuce : anecdote : l'auteur n'est qu'un étudiant universitaire fatigué des manipulations complexes pour changer d'API sur Claude Code."
+    },
+    {
+      "text": "*Astuce : info glaciale : `csw --apply NomFournisseur` active ce fournisseur sans ouvrir l'interface. Utilisable immédiatement après le changement."
+    },
+    {
+      "text": "*Astuce : anecdote : `csw --list` affiche dans le terminal tous les fournisseurs sauvegardés (noms et adresses) au format JSON, parfait pour les scripts ou vos propres automatisations."
+    },
+    {
+      "text": "*Astuce : anecdote : `csw --run NomFournisseur claude` lance Claude temporairement avec les variables d'environnement de ce fournisseur, sans changer le fournisseur actuellement activé dans l'interface."
+    },
+    {
+      "text": "*Astuce : anecdote : `csw --env-json NomFournisseur` affiche les variables d'environnement de ce fournisseur (sauf le Token) en JSON, pratique pour déboguer des problèmes comme « le nom du modèle n'est pas correct »."
+    },
+    {
+      "text": "*Astuce : anecdote : `csw --sanitize-settings` nettoie settings.json des éventuelles clés en clair résiduelles, ne gardant que les valeurs dpapi chiffrées."
+    },
+    {
+      "text": "*Astuce : anecdote : `csw --select-launch chemin/fichier` ouvre cette interface pour vous laisser choisir, écrit le nom du fournisseur dans le fichier spécifié et quitte — idéal pour que d'autres scripts exploitent votre sélection."
+    },
+    {
+      "text": "*Astuce : si vous trouvez ces astuces bien rédigées, c'est grâce aux utilisateurs. Si vous les trouvez mauvaises, c'est la faute de l'auteur."
+    },
+    {
+      "text": "*Astuce : un double Enter lance aussi Claude Code."
+    },
+    {
+      "text": "*Astuce : l'auteur déteste la salade 🚫🥗"
+    }
+  ],
+  "tip_terms": {
+    "cold": [
+      "Le saviez-vous"
+    ],
+    "ice": [
+      "Info glacée"
+    ],
+    "hot": [
+      "Astuce chaude"
+    ],
+    "author": [
+      "auteur",
+      "développeur"
+    ]
+  },
+  "status": {
+    "settings_sanitized": "Clés en clair supprimées de settings.json",
+    "author_opened": "Profil de l’auteur ouvert",
+    "no_editable_provider": "Aucun fournisseur à modifier",
+    "no_enable_provider": "Aucun fournisseur à activer",
+    "switching": "Bascule vers {name}...",
+    "switched": "Basculé vers {name}",
+    "switched_secure": "Basculé vers {name} (contrôle sécurité OK : clé non exposée)",
+    "error": "Erreur : {message}",
+    "enable_first": "Activez d’abord un modèle avec Enter",
+    "exit_prompt": "Appuyez encore sur Ctrl-C pour quitter.",
+    "added_encrypted": "Fournisseur ajouté ; Token enregistré en sécurité",
+    "updated_encrypted": "Modifications enregistrées ; Token enregistré en sécurité",
+    "unsaved_discarded": "Modifications non enregistrées abandonnées",
+    "keep_one_provider": "Gardez au moins un fournisseur",
+    "delete_target_changed": "La cible de suppression a changé",
+    "deleted": "{name} supprimé"
+  }
+}

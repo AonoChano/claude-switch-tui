@@ -1,0 +1,210 @@
+{
+  "meta": {
+    "code": "es-ES",
+    "name": "Spanish",
+    "native_name": "Español",
+    "order": 0
+  },
+  "app": {
+    "title": "Centro de cambio de entorno de Claude Code"
+  },
+  "menu": {
+    "full": {
+      "nav": "↑↓:navegar",
+      "enable": "Enter:activar modelo",
+      "launch": "C:lanzar Claude",
+      "add": "A:agregar",
+      "edit": "E:editar",
+      "delete": "D:eliminar",
+      "models": "M:detalles del modelo",
+      "language": "L:idioma"
+    },
+    "compact": {
+      "nav": "↑↓",
+      "enable": "Enter:activar",
+      "launch": "C:Claude",
+      "add": "A:agregar",
+      "edit": "E:editar",
+      "delete": "D:eliminar",
+      "models": "M:detalles",
+      "language": "L:idioma"
+    },
+    "minimal": {
+      "enable": "Enter:activar",
+      "launch": "C:Claude",
+      "add": "A",
+      "edit": "E",
+      "delete": "D",
+      "models": "M",
+      "language": "L"
+    }
+  },
+  "table": {
+    "status": "Estado",
+    "provider": "Nombre del proveedor",
+    "base_url": "Base URL",
+    "token": "Token",
+    "token_state": {
+      "keyring": "Keyring",
+      "dpapi": "DPAPI",
+      "encrypted": "Cifrado",
+      "dpapi_unavailable": "DPAPI N/A",
+      "legacy": "Migrar",
+      "unset": "Sin conf."
+    },
+    "empty": "No hay proveedores. Pulse A para agregar.",
+    "active": "Activado",
+    "no_models": "└── No hay modelos configurados"
+  },
+  "footer": {
+    "launch_button": "  Lanzar Claude Code  "
+  },
+  "language": {
+    "title": "Idioma",
+    "help": "↑↓/desplazamiento:seleccionar | clic:elegir | doble clic/Enter:aplicar | Esc:volver",
+    "auto": "Seguir al sistema",
+    "current_mark": "actual",
+    "applied": "Idioma cambiado a: {name}"
+  },
+  "form": {
+    "new_title": "Agregar proveedor",
+    "edit_title": "Editar proveedor",
+    "help": "Tab/↑↓ cambiar campo, Enter siguiente, en el último campo Enter guarda, Esc vuelve.",
+    "token_note": "El Token nunca se escribe en texto plano en settings.json; el perfil usa el almacén seguro del sistema.",
+    "fields": {
+      "name": "Nombre del proveedor",
+      "url": "Base URL",
+      "token": "API Token",
+      "opus": "Modelo Opus",
+      "sonnet": "Modelo Sonnet",
+      "haiku": "Modelo Haiku",
+      "anthropic": "ANTHROPIC_MODEL"
+    },
+    "buttons": {
+      "save": "  Guardar  ",
+      "back": "  Volver  "
+    },
+    "token_hint": {
+      "saved": "Cifrado; vacío para conservar",
+      "empty": "Vacío: sin Token"
+    },
+    "errors": {
+      "name_required": "El nombre del proveedor es obligatorio",
+      "token_encrypt_failed": "Error al cifrar Token: {message}"
+    }
+  },
+  "confirm": {
+    "unsaved_title": "  Cambios sin guardar  ",
+    "unsaved_body": " Elija guardar, descartar o cancelar para seguir editando.",
+    "save": "  Guardar  ",
+    "discard": "  Descartar  ",
+    "cancel": "  Cancelar  ",
+    "delete_title": "  Confirmar eliminación: {name}",
+    "delete_body": " Al eliminar se escribirá inmediatamente en custom_profiles.json.",
+    "delete": "  Confirmar eliminación  "
+  },
+  "tips": [
+    {
+      "text": "*Consejo: si usa el ratón, haga clic para seleccionar su proveedor."
+    },
+    {
+      "text": "*Consejo: por seguridad, la configuración solo se aplica al lanzar Claude Code desde esta ventana. Ejecutar `claude` directamente en una terminal nueva no se verá afectado."
+    },
+    {
+      "text": "*Consejo: haga doble clic para activar un proveedor; si prefiere el teclado, basta con un Enter."
+    },
+    {
+      "text": "*Consejo: ¿ve la línea con el CLI? Ese es su directorio de trabajo actual. El botón «Lanzar Claude Code» abrirá Claude Code usando ese directorio."
+    },
+    {
+      "text": "*Consejo: ¿Está editando y quiere salir? Pulse Esc con tranquilidad. El programa le preguntará si guardar, descartar o si fue un error."
+    },
+    {
+      "text": "*Consejo: dato caliente: su `Key` usa primero el almacén seguro del sistema: DPAPI en Windows, llavero del sistema en macOS/Linux."
+    },
+    {
+      "text": "*Consejo: dato curioso: esto es un programa local. Sus claves no se suben a ningún sitio."
+    },
+    {
+      "text": "*Consejo: para salir, pulse Ctrl-C dos veces seguidas. El autor tampoco sabe por qué..."
+    },
+    {
+      "text": "*Consejo: si lleva más de 60 segundos mirando esta pantalla, pulse C para lanzar Claude Code. Lleva esperando mucho."
+    },
+    {
+      "text": "*Consejo: no tema equivocarse de proveedor. Solo tiene que escribir `csw` en la terminal para cambiarlo cuando quiera."
+    },
+    {
+      "text": "*Consejo: a algunos les parecía que la antigua ventana de configuración era un ritual misterioso, así que se cambió a esta versión..."
+    },
+    {
+      "text": "*Consejo: pulse M para ver los detalles del modelo. Puede que descubra alguna configuración oculta que ni recordaba."
+    },
+    {
+      "text": "*Consejo: curiosidad: el desarrollador también usa esta herramienta. No tema, los errores le afectarán a él primero."
+    },
+    {
+      "text": "*Consejo: curiosidad: el desarrollador es solo un estudiante universitario harto de los complicados cambios de API para Claude Code."
+    },
+    {
+      "text": "*Consejo: dato escalofriante: `csw --apply NombreProveedor` activa ese proveedor sin abrir la interfaz. Úselo inmediatamente después de cambiar."
+    },
+    {
+      "text": "*Consejo: curiosidad: `csw --list` muestra en la terminal todos los proveedores guardados (nombre y URL) en formato JSON, ideal para scripts o automatizaciones."
+    },
+    {
+      "text": "*Consejo: curiosidad: `csw --run NombreProveedor claude` inicia Claude temporalmente con las variables de entorno de ese proveedor sin modificar el proveedor activo actual."
+    },
+    {
+      "text": "*Consejo: curiosidad: `csw --env-json NombreProveedor` imprime las variables de entorno de ese proveedor (excepto el Token) en JSON, útil para depurar problemas como «el nombre del modelo no es correcto»."
+    },
+    {
+      "text": "*Consejo: curiosidad: `csw --sanitize-settings` limpia settings.json de posibles claves en texto plano, dejando solo los valores dpapi cifrados."
+    },
+    {
+      "text": "*Consejo: curiosidad: `csw --select-launch ruta/archivo` abre la interfaz para que elija, escribe el nombre del proveedor en el archivo indicado y sale — ideal para que otros scripts usen su selección."
+    },
+    {
+      "text": "*Consejo: si estos consejos le parecen buenos, es mérito de los usuarios. Si le parecen malos, culpe al autor."
+    },
+    {
+      "text": "*Consejo: también puede lanzar Claude Code con doble Enter."
+    },
+    {
+      "text": "*Consejo: al autor le disgustan profundamente las ensaladas 🚫🥗"
+    }
+  ],
+  "tip_terms": {
+    "cold": [
+      "Dato curioso"
+    ],
+    "ice": [
+      "Dato helado"
+    ],
+    "hot": [
+      "Consejo caliente"
+    ],
+    "author": [
+      "autor",
+      "desarrollador"
+    ]
+  },
+  "status": {
+    "settings_sanitized": "Claves en claro eliminadas de settings.json",
+    "author_opened": "Perfil del autor abierto",
+    "no_editable_provider": "No hay proveedor para editar",
+    "no_enable_provider": "No hay proveedor para activar",
+    "switching": "Cambiando a {name}...",
+    "switched": "Cambiado a {name}",
+    "switched_secure": "Cambiado a {name} (comprobación segura: clave no expuesta)",
+    "error": "Error: {message}",
+    "enable_first": "Active primero un modelo con Enter",
+    "exit_prompt": "Pulse Ctrl-C otra vez para salir.",
+    "added_encrypted": "Proveedor añadido; Token guardado de forma segura",
+    "updated_encrypted": "Cambios guardados; Token guardado de forma segura",
+    "unsaved_discarded": "Cambios sin guardar descartados",
+    "keep_one_provider": "Mantenga al menos un proveedor",
+    "delete_target_changed": "El objetivo de borrado cambió",
+    "deleted": "{name} eliminado"
+  }
+}

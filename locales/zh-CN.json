@@ -1,0 +1,210 @@
+{
+  "meta": {
+    "code": "zh-CN",
+    "name": "Chinese (Simplified)",
+    "native_name": "简体中文",
+    "order": 0
+  },
+  "app": {
+    "title": "Claude Code 环境切换中心"
+  },
+  "menu": {
+    "full": {
+      "nav": "↑↓:切换",
+      "enable": "Enter:启用模型",
+      "launch": "C:启动Claude",
+      "add": "A:新增",
+      "edit": "E:编辑",
+      "delete": "D:删除",
+      "models": "M:模型详情",
+      "language": "L:语言设定"
+    },
+    "compact": {
+      "nav": "↑↓",
+      "enable": "Enter:启用",
+      "launch": "C:Claude",
+      "add": "A:新增",
+      "edit": "E:编辑",
+      "delete": "D:删除",
+      "models": "M:详情",
+      "language": "L:语言"
+    },
+    "minimal": {
+      "enable": "Enter:启用",
+      "launch": "C:Claude",
+      "add": "A",
+      "edit": "E",
+      "delete": "D",
+      "models": "M",
+      "language": "L"
+    }
+  },
+  "table": {
+    "status": "状态",
+    "provider": "供应商名称",
+    "base_url": "Base URL",
+    "token": "Token",
+    "token_state": {
+      "keyring": "Keyring",
+      "dpapi": "DPAPI",
+      "encrypted": "已加密",
+      "dpapi_unavailable": "DPAPI N/A",
+      "legacy": "待迁移",
+      "unset": "未设置"
+    },
+    "empty": "暂无供应商。按 A 新增。",
+    "active": "已启用",
+    "no_models": "└── 暂无模型配置"
+  },
+  "footer": {
+    "launch_button": " 启动 Claude Code "
+  },
+  "language": {
+    "title": "语言设定",
+    "help": "↑↓/鼠标滚轮:选择 | 单击:选中 | 双击/Enter:应用 | Esc:返回",
+    "auto": "跟随系统",
+    "current_mark": "当前",
+    "applied": "已切换语言：{name}"
+  },
+  "form": {
+    "new_title": "新增供应商",
+    "edit_title": "编辑供应商",
+    "help": "Tab/↑↓ 切换字段，Enter 前进，最后一项 Enter 保存，Esc 返回。",
+    "token_note": "Token 不会明文写入 settings.json；保存到 profile 时使用当前系统安全存储。",
+    "fields": {
+      "name": "供应商名称",
+      "url": "Base URL",
+      "token": "API Token",
+      "opus": "Opus 模型",
+      "sonnet": "Sonnet 模型",
+      "haiku": "Haiku 模型",
+      "anthropic": "ANTHROPIC_MODEL"
+    },
+    "buttons": {
+      "save": " 保存 ",
+      "back": " 返回 "
+    },
+    "token_hint": {
+      "saved": "已加密；留空保持不变",
+      "empty": "留空则不设置 Token"
+    },
+    "errors": {
+      "name_required": "供应商名称不能为空",
+      "token_encrypt_failed": "Token 加密失败：{message}"
+    }
+  },
+  "confirm": {
+    "unsaved_title": " 未保存的修改 ",
+    "unsaved_body": " 选择保存、放弃，或取消返回编辑。",
+    "save": " 保存 ",
+    "discard": " 放弃 ",
+    "cancel": " 取消 ",
+    "delete_title": " 确认删除：{name}",
+    "delete_body": " 删除后会立即写入 custom_profiles.json。",
+    "delete": " 确认删除 "
+  },
+  "tips": [
+    {
+      "text": "*Tip: 若果您使用鼠标，需要单击才能选中您设置的供应商"
+    },
+    {
+      "text": "*Tip: 出于安全考虑，您只有在此窗口运行Claude Code才能生效您的设置，开一个终端直接输入`Claude`这条指令并不受本工具影响。"
+    },
+    {
+      "text": "*Tip: 双击可以直接设置该供应商为激活状态；喜欢用键盘的话，Enter一次就行。"
+    },
+    {
+      "text": "*Tip: 看到那个CLI所在的那一行了吗？那是您目前所在的工作路径，右边的「启动 Claude Code」会以此目录为工作路径开启Claude Code。"
+    },
+    {
+      "text": "*Tip: 编辑提供商到一半突然想跑？您可以大胆Esc，软件会先问你是保存、放弃，或是您是否是手滑了……"
+    },
+    {
+      "text": "*Tip: 热知识：您的`Key`会优先交给系统安全存储：Windows 用 DPAPI，macOS/Linux 用系统密钥环。"
+    },
+    {
+      "text": "*Tip: 热知识：这是一个本地软件，您的密钥并不会被本工具上传到别处，它在这里安安心心的~"
+    },
+    {
+      "text": "*Tip: 如果您要退出软件，需要连续按两次Ctrl-C ！至于为什么，作者也不知道……"
+    },
+    {
+      "text": "*Tip: 如果您盯着这个界面超过了 60 秒，不如直接按 C 启动 Claude Code，它等很久了。"
+    },
+    {
+      "text": "*Tip: 不用担心选错供应商，您只要重新在终端输入`csw`，随时切，随时换。"
+    },
+    {
+      "text": "*Tip: 有人嫌弃旧的配置窗口像神秘仪式，所以改成了这版……"
+    },
+    {
+      "text": "*Tip: 按 M 展开模型详情，你可能会发现一些自己也忘记写进去的隐藏配置。"
+    },
+    {
+      "text": "*Tip: 冷知识：这个工具的开发者自己也在用，所以别怕，有 Bug 的话他第一个遭殃。"
+    },
+    {
+      "text": "*Tip: 冷知识：开发者只是一个被换ClaudeCode的API的复杂操作搞烦了的大学生。"
+    },
+    {
+      "text": "*Tip: 冰知识：直接敲 `csw --apply 供应商名字` 可以在不打开这个界面的情况下，直接让那个供应商生效，切完就能用。"
+    },
+    {
+      "text": "*Tip: 冷知识：`csw --list` 会把你所有已保存的供应商名字和地址以 JSON 形式输出到终端，适合喂给脚本或你自己写的自动化流程。"
+    },
+    {
+      "text": "*Tip: 冷知识：`csw --run 供应商名字 claude` 会临时使用那个供应商的环境变量启动一次 Claude，但不改变当前界面里已启用的供应商。"
+    },
+    {
+      "text": "*Tip: 冷知识：`csw --env-json 供应商名字` 会把那个供应商对应的环境变量（Token 除外）以 JSON 形式打印出来，方便排查“模型名怎么不对”这类问题。"
+    },
+    {
+      "text": "*Tip: 冷知识：`csw --sanitize-settings` 会清理 settings.json 中可能残留的明文密钥，只保留安全存储中的 Token。"
+    },
+    {
+      "text": "*Tip: 冷知识：`csw --select-launch 文件路径` 会打开这个界面让你选，选完后把供应商名字写入你指定的文件并退出——适合别的脚本拿你的选择结果干别的事。"
+    },
+    {
+      "text": "*Tip: 如果你觉得这些Tips写得还不错，那是用户的功劳；觉得烂，那是因为是作者写的。"
+    },
+    {
+      "text": "*Tip: 双击Enter也可以启动 Claude Code"
+    },
+    {
+      "text": "*Tip: 作者很讨厌吃沙拉 🚫🥗"
+    }
+  ],
+  "tip_terms": {
+    "cold": [
+      "冷知识"
+    ],
+    "ice": [
+      "冰知识"
+    ],
+    "hot": [
+      "热知识"
+    ],
+    "author": [
+      "作者",
+      "开发者"
+    ]
+  },
+  "status": {
+    "settings_sanitized": "已清理 settings.json 中的明文密钥",
+    "author_opened": "已打开作者主页",
+    "no_editable_provider": "暂无可编辑的供应商",
+    "no_enable_provider": "暂无可启用的供应商",
+    "switching": "正在切换至 {name}...",
+    "switched": "已成功切换至 {name}",
+    "switched_secure": "已成功切换至 {name}（✔  安全检测通过：密钥未暴露）",
+    "error": "错误：{message}",
+    "enable_first": "请先按 Enter 启用模型",
+    "exit_prompt": "Press Ctrl-C again to exit.",
+    "added_encrypted": "已新增供应商，Token 已加密保存",
+    "updated_encrypted": "已保存修改，Token 已加密保存",
+    "unsaved_discarded": "已放弃未保存的修改",
+    "keep_one_provider": "至少保留一个供应商",
+    "delete_target_changed": "删除目标已变化",
+    "deleted": "已删除 {name}"
+  }
+}
