@@ -37,6 +37,7 @@ docs/assets/Edit_page.png
 
 # Local ClaudeSwitch state and secrets
 AGENTS.md
+chat_histories/
 settings.json
 custom_profiles.json
 claude_switch_config.json
