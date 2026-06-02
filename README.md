@@ -10,6 +10,7 @@
 
 <p align="center">
   <a href="#install">Install</a> |
+  <a href="#usage">Usage</a> |
   <a href="#why-this-exists">Why</a> |
   <a href="#security-model">Security</a> |
   <a href="#language-packs">Language Packs</a>
@@ -62,7 +63,7 @@ csw
 
 The installer creates a local virtual environment, installs dependencies from `requirements.txt`, and registers the ClaudeSwitch directory in your user `PATH`.
 
-If installation says Python was not found or a virtual environment could not be created, install or repair Python 3.10+, open a new PowerShell, and rerun the one-line installer.
+If installation says Python was not found or a virtual environment could not be created, install or repair Python 3.10+, open a new terminal, and rerun the one-line installer.
 
 The default install directories are:
 
@@ -106,7 +107,17 @@ To skip migration cleanup:
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -NoLegacyCleanup
 ```
 
-Linux/macOS install adds a managed PATH block to `~/.profile`, `~/.bashrc`, and existing `~/.zshrc`. Remove it with:
+Linux/macOS install adds a managed PATH block to `~/.profile`, `~/.bashrc`, and existing `~/.zshrc`. The uninstall script removes that block.
+
+### Uninstall
+
+Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.claude\scripts\claude-switch-tui\uninstall.ps1"
+```
+
+Linux/macOS:
 
 ```sh
 sh ~/.claude/scripts/claude-switch-tui/uninstall.sh
@@ -146,7 +157,7 @@ csw --check-update
 csw --update
 ```
 
-ClaudeSwitch updates the Windows Terminal tab title while it runs. Set this before launching to disable title changes:
+ClaudeSwitch updates the terminal tab title where supported. Set this before launching to disable title changes:
 
 ```powershell
 $env:CLAUDE_SWITCH_SET_TITLE = "0"
@@ -157,6 +168,20 @@ ClaudeSwitch checks GitHub Releases for updates at most once per day on TUI star
 ```powershell
 $env:CLAUDE_SWITCH_NO_UPDATE_CHECK = "1"
 ```
+
+## Troubleshooting
+
+Python install errors usually mean the system cannot create a virtual environment.
+
+On Windows, install Python 3.10+ from python.org and enable `Add python.exe to PATH`.
+
+On Debian, Ubuntu, or Raspberry Pi OS:
+
+```sh
+sudo apt install python3 python3-venv
+```
+
+ClaudeSwitch can switch profiles without Claude Code installed, but launching Claude Code from the TUI requires the `claude` command to exist in `PATH`.
 
 ## Security Model
 
@@ -192,22 +217,11 @@ Current language packs include Chinese, English, Japanese, Korean, Russian, Germ
 
 To translate a new language, use `locales/TRANSLATION_PROMPT.md` with `locales/zh-CN.json` as the source. Keep placeholders, command names, JSON keys, and `tip_terms` intact.
 
-## Screenshots and GIFs
-
-For the GitHub page, a short GIF or polished screenshot will show the real value better:
-
-- Move through providers with the keyboard.
-- Hover and click menu actions with the mouse.
-- Open the edit form and language picker.
-- Launch Claude Code from the current directory.
-
-A 12-18 second loop is enough. Keep real API tokens and provider-specific private names out of the recording.
-
 ## Project Status
 
 Current version: `0.2.0`
 
-The project is early but usable. The next useful polish items are locale validation commands, cross-platform installer scripts, and real release screenshots.
+ClaudeSwitch is in early public release. Check the GitHub Releases page for version history.
 
 ## License
 
