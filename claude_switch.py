@@ -83,9 +83,9 @@ console = Console()
 
 VERSION_FILE = SCRIPT_DIR / "VERSION"
 try:
-    APP_VERSION = VERSION_FILE.read_text(encoding="utf-8").strip() or "0.1.1"
+    APP_VERSION = VERSION_FILE.read_text(encoding="utf-8").strip() or "0.2.0"
 except OSError:
-    APP_VERSION = "0.1.1"
+    APP_VERSION = "0.2.0"
 AUTHOR_LINK = "https://github.com/AonoChano"
 AUTHOR_NAME = "AonoChano"
 GITHUB_ICON = "\uf09b"
@@ -1112,9 +1112,9 @@ def safe_extract_zip(zip_path, destination):
         archive.extractall(destination)
 
 
-def find_install_script_from_archive(destination):
+def find_install_script_from_archive(destination, script_name):
     destination = Path(destination)
-    for path in destination.rglob("install.ps1"):
+    for path in destination.rglob(script_name):
         if path.is_file():
             return path
     return None
@@ -1140,10 +1140,6 @@ def print_update_check():
 
 
 def run_self_update():
-    if os.name != "nt":
-        print("csw --update currently uses the Windows PowerShell installer.", file=sys.stderr)
-        return 1
-
     try:
         info = check_for_update(timeout=10, write_cache=True)
     except (OSError, urllib.error.URLError, json.JSONDecodeError, RuntimeError) as exc:
@@ -1179,21 +1175,30 @@ def run_self_update():
             print(f"Failed to download or extract release source: {exc}", file=sys.stderr)
             return 1
 
-        install_script = find_install_script_from_archive(extract_dir)
+        install_script_name = "install.ps1" if os.name == "nt" else "install.sh"
+        install_script = find_install_script_from_archive(extract_dir, install_script_name)
         if not install_script:
-            print("Release source did not contain install.ps1.", file=sys.stderr)
+            print(f"Release source did not contain {install_script_name}.", file=sys.stderr)
             return 1
 
-        command = [
-            "powershell.exe",
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(install_script),
-            "-InstallDir",
-            str(install_dir),
-        ]
+        if os.name == "nt":
+            command = [
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-File",
+                str(install_script),
+                "-InstallDir",
+                str(install_dir),
+            ]
+        else:
+            command = [
+                "sh",
+                str(install_script),
+                "--install-dir",
+                str(install_dir),
+            ]
         env = os.environ.copy()
         env["CLAUDE_SWITCH_RUNNING_DIR"] = str(SCRIPT_DIR)
         completed = subprocess.run(command, env=env)

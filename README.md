@@ -40,12 +40,18 @@ It is not a proxy, router, or model gateway. ClaudeSwitch writes the local envir
 
 ## Install
 
-Requirement: Python 3.10+ with `venv` support. On Windows, install Python from python.org and enable `Add python.exe to PATH`.
+Requirement: Python 3.10+ with `venv` support. On Windows, install Python from python.org and enable `Add python.exe to PATH`. On Debian/Raspberry Pi OS, install `python3-venv` if venv creation fails.
 
 Windows PowerShell:
 
 ```powershell
 irm https://raw.githubusercontent.com/AonoChano/claude-switch-tui/main/bootstrap.ps1 | iex
+```
+
+Linux/macOS shell:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/AonoChano/claude-switch-tui/main/bootstrap.sh | sh
 ```
 
 Open a new terminal, then run:
@@ -58,10 +64,11 @@ The installer creates a local virtual environment, installs dependencies from `r
 
 If installation says Python was not found or a virtual environment could not be created, install or repair Python 3.10+, open a new PowerShell, and rerun the one-line installer.
 
-The default install directory is:
+The default install directories are:
 
 ```text
-%USERPROFILE%\.claude\scripts\claude-switch-tui
+Windows: %USERPROFILE%\.claude\scripts\claude-switch-tui
+Linux/macOS: ~/.claude/scripts/claude-switch-tui
 ```
 
 Manual install from a cloned repository still works:
@@ -70,6 +77,14 @@ Manual install from a cloned repository still works:
 git clone https://github.com/AonoChano/claude-switch-tui.git
 cd claude-switch-tui
 powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+On Linux/macOS:
+
+```sh
+git clone https://github.com/AonoChano/claude-switch-tui.git
+cd claude-switch-tui
+sh ./install.sh
 ```
 
 ### Upgrade from early builds
@@ -89,6 +104,12 @@ To skip migration cleanup:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -NoLegacyCleanup
+```
+
+Linux/macOS install adds a managed PATH block to `~/.profile`, `~/.bashrc`, and existing `~/.zshrc`. Remove it with:
+
+```sh
+sh ~/.claude/scripts/claude-switch-tui/uninstall.sh
 ```
 
 Manual Python run:
@@ -184,7 +205,7 @@ A 12-18 second loop is enough. Keep real API tokens and provider-specific privat
 
 ## Project Status
 
-Current version: `0.1.1`
+Current version: `0.2.0`
 
 The project is early but usable. The next useful polish items are locale validation commands, cross-platform installer scripts, and real release screenshots.
 

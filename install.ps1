@@ -417,6 +417,9 @@ function Remove-LegacyInstallDirectory {
         "install.ps1",
         "uninstall.ps1",
         "bootstrap.ps1",
+        "install.sh",
+        "uninstall.sh",
+        "bootstrap.sh",
         "csw.cmd",
         "csw.bat",
         "csw.ps1",
@@ -594,6 +597,9 @@ $sourceLocales = Join-Path $sourceRoot "locales"
 $sourceInstall = Join-Path $sourceRoot "install.ps1"
 $sourceUninstall = Join-Path $sourceRoot "uninstall.ps1"
 $sourceBootstrap = Join-Path $sourceRoot "bootstrap.ps1"
+$sourceInstallSh = Join-Path $sourceRoot "install.sh"
+$sourceUninstallSh = Join-Path $sourceRoot "uninstall.sh"
+$sourceBootstrapSh = Join-Path $sourceRoot "bootstrap.sh"
 $venvDir = Join-Path $InstallDir ".venv"
 $venvPython = Join-Path $venvDir "Scripts\python.exe"
 
@@ -604,7 +610,7 @@ if (-not (Test-Path -LiteralPath $sourceRequirements)) {
     throw "Cannot find requirements.txt: $sourceRequirements"
 }
 
-$version = if (Test-Path -LiteralPath $sourceVersion) { (Get-Content -LiteralPath $sourceVersion -Raw).Trim() } else { "0.1.1" }
+$version = if (Test-Path -LiteralPath $sourceVersion) { (Get-Content -LiteralPath $sourceVersion -Raw).Trim() } else { "0.2.0" }
 
 Write-Host "[csw] Installing Claude Switch $version"
 Write-Host "[csw] InstallDir: $InstallDir"
@@ -620,7 +626,7 @@ Invoke-InstallStep "Copying application files" {
     if (Test-Path -LiteralPath $sourceVersion) {
         Copy-IfDifferent -Source $sourceVersion -Destination (Join-Path $InstallDir "VERSION")
     }
-    foreach ($script in @($sourceInstall, $sourceUninstall, $sourceBootstrap)) {
+    foreach ($script in @($sourceInstall, $sourceUninstall, $sourceBootstrap, $sourceInstallSh, $sourceUninstallSh, $sourceBootstrapSh)) {
         if (Test-Path -LiteralPath $script) {
             Copy-IfDifferent -Source $script -Destination (Join-Path $InstallDir (Split-Path -Leaf $script))
         }
